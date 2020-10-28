@@ -96,7 +96,7 @@ namespace RektaRetailApp.Web.Services
       _db.Categories.Remove(category);
     }
 
-    public async Task SaveAsync()
+    public Task SaveAsync()
     {
         await Commit<Category>().ConfigureAwait(false);
     }
