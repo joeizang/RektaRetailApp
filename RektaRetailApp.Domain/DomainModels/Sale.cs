@@ -7,21 +7,21 @@ using RektaRetailApp.Domain.Abstractions;
 
 namespace RektaRetailApp.Domain.DomainModels
 {
-    public class Sale : BaseDomainModel
+  public class Sale : BaseDomainModel
+  {
+    public Sale()
     {
-        public Sale()
-        {
-            ItemsSold = new List<ItemSold>();
-        }
-        public DateTimeOffset SaleDate { get; set; }
+      ItemsSold = new List<ItemSold>();
+    }
+    public DateTimeOffset SaleDate { get; set; }
 
         public string SalesPersonId { get; set; } = null!;
 
         public decimal SubTotal { get; set; }
 
-        public decimal GrandTotal { get; set; }
+    public decimal GrandTotal { get; set; }
 
-        public SaleType SaleType { get; set; }
+    public SaleType TypeOfSale { get; set; }
 
         [StringLength(50)]
         public string? CustomerName { get; set; }
@@ -29,6 +29,9 @@ namespace RektaRetailApp.Domain.DomainModels
         [StringLength(50)]
         public string? CustomerPhoneNumber { get; set; }
 
-        public List<ItemSold> ItemsSold { get; set; }
-    }
+    [ForeignKey(nameof(CustomerId))]
+    public Customer Customer { get; set; } = null!;
+
+    public List<ItemSold> ItemsSold { get; set; }
+  }
 }

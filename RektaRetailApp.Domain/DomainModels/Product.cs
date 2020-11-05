@@ -6,20 +6,20 @@ using RektaRetailApp.Domain.Abstractions;
 
 namespace RektaRetailApp.Domain.DomainModels
 {
-    public class Product : BaseDomainModel
+  public class Product : BaseDomainModel
+  {
+    public Product()
     {
-        public Product()
-        {
-            ProductCategories = new List<Category>();
-        }
+      ProductCategories = new List<Category>();
+    }
 
-        [Required]
-        [StringLength(50)]
-        public string Name { get; set; } = null!;
+    [Required]
+    [StringLength(50)]
+    public string Name { get; set; } = null!;
 
-        [Column(TypeName = "decimal(12,2)")]
-        [Required]
-        public decimal RetailPrice { get; set; }
+    [Column(TypeName = "decimal(12,2)")]
+    [Required]
+    public decimal RetailPrice { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(12,2)")]
@@ -29,11 +29,11 @@ namespace RektaRetailApp.Domain.DomainModels
         [Column(TypeName = "decimal(12,2)")]
         public decimal UnitPrice { get; set; }
 
-        [Required]
-        public DateTimeOffset SupplyDate { get; set; }
+    [Required]
+    public DateTimeOffset SupplyDate { get; set; }
 
-        [Required]
-        public float Quantity { get; set; }
+    [Required]
+    public float Quantity { get; set; }
 
         public string? Brand { get; set; }
 
