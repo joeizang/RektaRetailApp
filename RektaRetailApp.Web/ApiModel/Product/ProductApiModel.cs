@@ -53,6 +53,15 @@ public class ProductApiModel
         public float Quantity { get; set; }
     }
 
+    public class ProductSummaryApiModel
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; } = string.Empty;
+
+        public float Quantity { get; set; }
+    }
+
     public class CreateProductApiModel
     {
         public CreateProductApiModel(int supplierId, decimal suppliedPrice, float quantity, decimal unitPrice, decimal retailPrice, DateTimeOffset supplyDate)

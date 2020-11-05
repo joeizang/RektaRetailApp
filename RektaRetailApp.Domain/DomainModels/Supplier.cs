@@ -23,10 +23,10 @@ namespace RektaRetailApp.Domain.DomainModels
 
         [StringLength(50)]
         [Required]
-        public string? Name { get; set; } = null!;
+        public string? Name { get; set; }
 
         [StringLength(50)]
-        public string? MobileNumber { get; set; } = null!;
+        public string? MobileNumber { get; set; }
 
         [StringLength(200)]
         public string? Description { get; set; }

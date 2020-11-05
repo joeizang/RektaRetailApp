@@ -7,20 +7,29 @@ namespace RektaRetailApp.Web.ApiModel
     {
         public T Data { get; } = null!;
 
+<<<<<<< HEAD
         public List<object>? Errors { get; } = new List<object>();
+=======
+        public dynamic? Errors { get; }
+>>>>>>> 5ffa05a (implement soft delete on all DomainEntities.)
 
         public string CurrentResponseStatus { get; }
 
         public Response(string currentResponseStatus, dynamic errors)
         {
             CurrentResponseStatus = currentResponseStatus;
+<<<<<<< HEAD
             Errors?.Add(errors);
+=======
+            Errors = errors;
+>>>>>>> 5ffa05a (implement soft delete on all DomainEntities.)
         }
 
         public Response(T data, string currentResponseStatus, dynamic errors = null!)
         {
             Data = data ?? throw new ArgumentException("the first argument is in an invalid state!");
             CurrentResponseStatus = currentResponseStatus;
+<<<<<<< HEAD
             if (errors == null || CurrentResponseStatus == ResponseStatus.Success) return;
             Errors?.Add(errors);
             CurrentResponseStatus = ResponseStatus.NonAction;
@@ -28,6 +37,15 @@ namespace RektaRetailApp.Web.ApiModel
             {
                 ErrorMessage = "The response is assuming an invalid state and has been defaulted to a state of fault!"
             });
+=======
+            if (errors != null && CurrentResponseStatus != ResponseStatus.Success)
+                Errors = errors;
+            CurrentResponseStatus = ResponseStatus.Failure;
+            Errors = new
+            {
+                ErrorMessage = "The response is assuming an invalid state and has been defaulted to a state of fault!"
+            };
+>>>>>>> 5ffa05a (implement soft delete on all DomainEntities.)
         }
     }
 
@@ -35,6 +53,7 @@ namespace RektaRetailApp.Web.ApiModel
     {
         public static string Success { get; } = nameof(Success);
 
+<<<<<<< HEAD
         public static string Error { get; } = nameof(Error);
 
         public static string Failure { get; } = nameof(Failure);
@@ -52,4 +71,10 @@ namespace RektaRetailApp.Web.ApiModel
         public static string Deletion { get; } = nameof(Deletion);
     }
 
+=======
+        public static string Error { get; set; } = nameof(Error);
+
+        public static string Failure { get; set; } = nameof(Failure);
+    }
+>>>>>>> 5ffa05a (implement soft delete on all DomainEntities.)
 }
