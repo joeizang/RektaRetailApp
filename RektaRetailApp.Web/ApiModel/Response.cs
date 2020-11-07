@@ -7,29 +7,20 @@ namespace RektaRetailApp.Web.ApiModel
     {
         public T Data { get; } = null!;
 
-<<<<<<< HEAD
         public List<object>? Errors { get; } = new List<object>();
-=======
-        public dynamic? Errors { get; }
->>>>>>> 5ffa05a (implement soft delete on all DomainEntities.)
 
         public string CurrentResponseStatus { get; }
 
         public Response(string currentResponseStatus, dynamic errors)
         {
             CurrentResponseStatus = currentResponseStatus;
-<<<<<<< HEAD
             Errors?.Add(errors);
-=======
-            Errors = errors;
->>>>>>> 5ffa05a (implement soft delete on all DomainEntities.)
         }
 
         public Response(T data, string currentResponseStatus, dynamic errors = null!)
         {
             Data = data ?? throw new ArgumentException("the first argument is in an invalid state!");
             CurrentResponseStatus = currentResponseStatus;
-<<<<<<< HEAD
             if (errors == null || CurrentResponseStatus == ResponseStatus.Success) return;
             Errors?.Add(errors);
             CurrentResponseStatus = ResponseStatus.NonAction;
@@ -37,15 +28,6 @@ namespace RektaRetailApp.Web.ApiModel
             {
                 ErrorMessage = "The response is assuming an invalid state and has been defaulted to a state of fault!"
             });
-=======
-            if (errors != null && CurrentResponseStatus != ResponseStatus.Success)
-                Errors = errors;
-            CurrentResponseStatus = ResponseStatus.Failure;
-            Errors = new
-            {
-                ErrorMessage = "The response is assuming an invalid state and has been defaulted to a state of fault!"
-            };
->>>>>>> 5ffa05a (implement soft delete on all DomainEntities.)
         }
     }
 
@@ -53,6 +35,7 @@ namespace RektaRetailApp.Web.ApiModel
     {
         public static string Success { get; } = nameof(Success);
 
+<<<<<<< HEAD
 <<<<<<< HEAD
         public static string Error { get; } = nameof(Error);
 
@@ -73,8 +56,21 @@ namespace RektaRetailApp.Web.ApiModel
 
 =======
         public static string Error { get; set; } = nameof(Error);
+=======
+        public static string Error { get; } = nameof(Error);
+>>>>>>> a4e57b3 (enabled soft delete feature. Enabled domain events to carry basic logs within them. Fixing Product persistence features)
 
-        public static string Failure { get; set; } = nameof(Failure);
+        public static string Failure { get; } = nameof(Failure);
+    }
+
+
+    public class TaskPerformed
+    {
+        public static string Creation { get; } = nameof(Creation);
+
+        public static string Modification { get; } = nameof(Modification);
+
+        public static string Deletion { get; } = nameof(Deletion);
     }
 >>>>>>> 5ffa05a (implement soft delete on all DomainEntities.)
 }
