@@ -94,7 +94,12 @@ public class ProductApiModel
 
     public class ProductDetailApiModel
     {
+<<<<<<< HEAD
         public ProductDetailApiModel(decimal retailPrice, string name, float quantity, decimal suppliedPrice, DateTimeOffset supplyDate, int id)
+=======
+        public ProductDetailApiModel(decimal retailPrice, decimal unitPrice, string name,
+            float quantity, decimal suppliedPrice, string? supplierName, string? mobileNumber, string? imageUrl, DateTimeOffset supplyDate)
+>>>>>>> e3390aa (finished with backend features for suppliers. Working on frontend features for suppliers)
         {
             Name = name;
             RetailPrice = retailPrice;
@@ -102,7 +107,11 @@ public class ProductApiModel
             CostPrice = suppliedPrice;
             ProductCategories = new List<CategoryApiModel>();
             SupplyDate = supplyDate;
+<<<<<<< HEAD
             Id = id;
+=======
+            ImageUrl = imageUrl;
+>>>>>>> e3390aa (finished with backend features for suppliers. Working on frontend features for suppliers)
         }
 
         public ProductDetailApiModel()
@@ -122,6 +131,15 @@ public class ProductApiModel
 
         public List<CategoryApiModel> ProductCategories { get; }
 
+<<<<<<< HEAD
+=======
+        public string? SupplierName { get; }
+
+        public string? MobileNumber { get; }
+        
+        public string? ImageUrl { get; set; }
+
+>>>>>>> e3390aa (finished with backend features for suppliers. Working on frontend features for suppliers)
         public DateTimeOffset SupplyDate { get; }
     }
 }

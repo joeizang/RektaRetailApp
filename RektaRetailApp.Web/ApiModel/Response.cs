@@ -23,7 +23,11 @@ namespace RektaRetailApp.Web.ApiModel
             CurrentResponseStatus = currentResponseStatus;
             if (errors == null || CurrentResponseStatus == ResponseStatus.Success) return;
             Errors?.Add(errors);
+<<<<<<< HEAD
             CurrentResponseStatus = ResponseStatus.NonAction;
+=======
+            CurrentResponseStatus = ResponseStatus.Failure;
+>>>>>>> e3390aa (finished with backend features for suppliers. Working on frontend features for suppliers)
             Errors?.Add(new
             {
                 ErrorMessage = "The response is assuming an invalid state and has been defaulted to a state of fault!"
