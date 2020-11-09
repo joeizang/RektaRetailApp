@@ -14,5 +14,4 @@ namespace RektaRetailApp.Web.DomainEvents.Product
             PayLoad = model;
         }
     }
-
 }
