@@ -78,16 +78,16 @@ export class LoginMenu extends Component<IProps, IState> {
   anonymousView(registerPath: any, loginPath: any) {
     return (
       <Fragment>
-        <LinkContainer to={registerPath}>
-          <NavItem>
+      <NavItem>
+          <LinkContainer to={registerPath}>
             <NavLink className="text-dark">Register</NavLink>
-          </NavItem>
-        </LinkContainer>
+          </LinkContainer>
+      </NavItem>
+      <NavItem>
         <LinkContainer to={loginPath}>
-          <NavItem>
             <NavLink className="text-dark">Login</NavLink>
-          </NavItem>
         </LinkContainer>
+      </NavItem>
       </Fragment>
     );
   }
