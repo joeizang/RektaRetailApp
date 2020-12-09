@@ -1,15 +1,18 @@
+using System.Text.Json.Serialization;
+
 namespace RektaRetailApp.Domain.DomainModels
 {
-  public enum UnitMeasure
-  {
-    KG,
-    MEASURE,
-    PACKS,
-    CRATE,
-    GALLON,
-    TUBER,
-    BOTTLE,
-    PIECES,
-    OTHER
-  }
+    [JsonConverter(typeof(UnitMeasure))]
+    public enum UnitMeasure
+    {
+        KG,
+        MEASURE,
+        PACKS,
+        CRATE,
+        GALLON,
+        TUBER,
+        BOTTLE,
+        PIECES,
+        OTHER
+    }
 }

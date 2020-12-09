@@ -1,18 +1,22 @@
-﻿namespace RektaRetailApp.Domain.DomainModels
-{
-  public enum SaleType
-  {
-    Paid,
-    Credit,
-  }
+﻿using System.Text.Json.Serialization;
 
-  public enum PaymentType
-  {
-    Cash,
-    Credit,
-    Electronic,
-    USSD,
-    Cheque,
-    Other
-  }
+namespace RektaRetailApp.Domain.DomainModels
+{
+    [JsonConverter(typeof(SaleType))]
+    public enum SaleType
+    {
+        Paid,
+        Credit,
+    }
+
+    [JsonConverter(typeof(PaymentType))]
+    public enum PaymentType
+    {
+        Cash,
+        Credit,
+        Electronic,
+        USSD,
+        Cheque,
+        Other
+    }
 }

@@ -20,8 +20,6 @@ namespace RektaRetailApp.Web.Data
 
         public DbSet<Customer> Customers { get; set; } = default!;
 
-        public DbSet<ItemSold> ItemsSold { get; set; } = default!;
-
         public DbSet<Product> Products { get; set; } = default!;
 
         public DbSet<Shift> WorkerShifts { get; set; } = default!;
@@ -50,7 +48,6 @@ namespace RektaRetailApp.Web.Data
                 .HasQueryFilter(x => !x.IsDeleted);
             builder.Entity<Supplier>()
                 .HasQueryFilter(x => !x.IsDeleted);
-            builder.Entity<ItemSold>().HasQueryFilter(x => !x.IsDeleted);
             builder.Entity<Shift>().HasQueryFilter(x => x.IsDeleted);
             builder.Entity<ApplicationUser>().HasQueryFilter(x => !x.IsDeleted);
             builder.Entity<ApplicationRole>().HasQueryFilter(x => !x.IsDeleted);
@@ -69,17 +66,9 @@ namespace RektaRetailApp.Web.Data
                 .WithMany(s => s.ProductInventories)
                 .HasForeignKey(i => i.SupplierId);
 
-            builder.Entity<ItemSold>()
-                .HasOne(i => i.Product)
-                .WithMany().HasForeignKey(i => i.ProductId).OnDelete(DeleteBehavior.Restrict);
             builder.Entity<Inventory>()
                 .HasMany(i => i.InventoryItems)
                 .WithOne().OnDelete(DeleteBehavior.Restrict);
-            builder.Entity<Sale>()
-                .HasOne(s => s.SalesPerson)
-                .WithMany(a => a.SalesYouOwn)
-                .HasForeignKey(s => s.SalesPersonId)
-                .OnDelete(DeleteBehavior.Restrict);
             builder.Entity<Sale>()
                 .HasMany(s => s.ItemsSold)
                 .WithOne()

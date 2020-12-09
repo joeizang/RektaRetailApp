@@ -10,14 +10,11 @@ namespace RektaRetailApp.Domain.DomainModels
   {
     public Sale()
     {
-      ItemsSold = new List<ItemSold>();
+      ItemsSold = new List<Product>();
     }
     public DateTimeOffset SaleDate { get; set; }
 
-    [ForeignKey(nameof(SalesPerson))]
-    public string SalesPersonId { get; set; } = null!;
-
-    public ApplicationUser SalesPerson { get; set; } = null!;
+    public string SalesPerson { get; set; } = null!;
 
     public decimal SubTotal { get; set; }
 
@@ -32,6 +29,6 @@ namespace RektaRetailApp.Domain.DomainModels
     [ForeignKey(nameof(CustomerId))]
     public Customer Customer { get; set; } = null!;
 
-    public List<ItemSold> ItemsSold { get; set; }
+    public List<Product> ItemsSold { get; set; }
   }
 }
