@@ -12,12 +12,21 @@ namespace RektaRetailApp.Domain.DomainModels
             ProductInventories = new List<SuppliersInventories>();
         }
 
-        [StringLength(50)]
-        [Required]
-        public string Name { get; set; } = null!;
+        public Supplier(string? name, string? mobileNumber, string? description)
+        {
+            Name = name;
+            MobileNumber = mobileNumber;
+            Description = description;
+            ProductsSupplied = new List<Product>();
+            ProductInventories = new List<SuppliersInventories>();
+        }
 
         [StringLength(50)]
-        public string MobileNumber { get; set; } = null!;
+        [Required]
+        public string? Name { get; set; }
+
+        [StringLength(50)]
+        public string? MobileNumber { get; set; }
 
         [StringLength(200)]
         public string? Description { get; set; }

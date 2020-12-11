@@ -10,5 +10,4 @@ namespace RektaRetailApp.Web.Helpers
         public string ActionPerformed { get; set; } = null!;
         public object? PayLoad { get; set; }
     }
-
 }

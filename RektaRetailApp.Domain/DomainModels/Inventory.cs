@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Text;
 using RektaRetailApp.Domain.Abstractions;
 
@@ -22,9 +23,20 @@ namespace RektaRetailApp.Domain.DomainModels
         [StringLength(450)]
         public string? Description { get; set; }
 
-        public string? BatchNumber { get; set; }
+        public UnitMeasure UnitAmount { get; set; }
+
+        public float Quantity { get; set; }
+
+        public decimal TotalCostValue { get; private set; }
 
         public float Quantity => InventoryItems.Sum(q => q.Quantity);
+
+        [ForeignKey(nameof(Category))]
+        public int CategoryId { get; set; }
+
+        public bool Verified { get; set; }
+
+        public string? BatchNumber { get; set; }
 
         [ForeignKey(nameof(Category))]
         public int CategoryId { get; set; }
@@ -38,6 +50,19 @@ namespace RektaRetailApp.Domain.DomainModels
         public DateTimeOffset SupplyDate { get; set; }
 
         public List<SuppliersInventories> InventorySuppliers { get; set; }
+
+
+        public void CalculateTotalValuesOfInventory()
+        {
+            if (InventoryItems.Any())
+            {
+                TotalCostValue = InventoryItems.Sum(x => x.SuppliedPrice);
+                TotalRetailValue = InventoryItems.Sum(x => x.RetailPrice);
+
+            }
+            TotalCostValue = 0;
+            TotalRetailValue = 0;
+        }
 
     }
 }

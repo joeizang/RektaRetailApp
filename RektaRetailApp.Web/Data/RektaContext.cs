@@ -20,8 +20,6 @@ namespace RektaRetailApp.Web.Data
 
         public DbSet<Customer> Customers { get; set; } = default!;
 
-        public DbSet<ItemSold> ItemsSold { get; set; } = default!;
-
         public DbSet<Product> Products { get; set; } = default!;
 
         public DbSet<Shift> WorkerShifts { get; set; } = default!;
@@ -40,6 +38,21 @@ namespace RektaRetailApp.Web.Data
         {
             base.OnModelCreating(builder);
 
+            builder.Entity<Sale>()
+                .HasQueryFilter(x => !x.IsDeleted);
+            builder.Entity<Product>()
+                .HasQueryFilter(x => !x.IsDeleted);
+            builder.Entity<Inventory>()
+                .HasQueryFilter(x => !x.IsDeleted);
+            builder.Entity<Category>()
+                .HasQueryFilter(x => !x.IsDeleted);
+            builder.Entity<Supplier>()
+                .HasQueryFilter(x => !x.IsDeleted);
+            builder.Entity<Shift>().HasQueryFilter(x => x.IsDeleted);
+            builder.Entity<ApplicationUser>().HasQueryFilter(x => !x.IsDeleted);
+            builder.Entity<ApplicationRole>().HasQueryFilter(x => !x.IsDeleted);
+
+
             builder.Entity<SuppliersInventories>()
                 .HasKey(k => new { k.InventoryId, k.SupplierId });
 
@@ -53,9 +66,6 @@ namespace RektaRetailApp.Web.Data
                 .WithMany(s => s.ProductInventories)
                 .HasForeignKey(i => i.SupplierId);
 
-            builder.Entity<ItemSold>()
-                .HasOne(i => i.Product)
-                .WithMany().HasForeignKey(i => i.ProductId).OnDelete(DeleteBehavior.Restrict);
             builder.Entity<Inventory>()
                 .HasMany(i => i.InventoryItems)
                 .WithOne().OnDelete(DeleteBehavior.Restrict);
@@ -75,13 +85,28 @@ namespace RektaRetailApp.Web.Data
 
             builder.Entity<Sale>()
                 .Property(s => s.GrandTotal)
-                .HasColumnType("decimal(9,2)");
+                .HasColumnType("decimal(12,2)");
             builder.Entity<Sale>()
                 .Property(s => s.SubTotal)
-                .HasColumnType("decimal(9,2)");
+                .HasColumnType("decimal(12,2)");
             builder.Entity<Shift>()
                 .Property(s => s.HourlyRate)
-                .HasColumnType("decimal(9,2)");
+                .HasColumnType("decimal(12,2)");
+            builder.Entity<Inventory>()
+                .Property(i => i.TotalCostValue)
+                .HasColumnType("decimal(12,2)");
+            builder.Entity<Inventory>()
+                .Property(i => i.TotalRetailValue)
+                .HasColumnType("decimal(12,2)");
+            builder.Entity<Product>()
+                .Property(p => p.RetailPrice)
+                .HasColumnType("decimal(12,2)");
+            builder.Entity<Product>()
+                .Property(p => p.SuppliedPrice)
+                .HasColumnType("decimal(12,2)");
+            builder.Entity<Product>()
+                .Property(p => p.UnitPrice)
+                .HasColumnType("decimal(12,2)");
             builder.Entity<Category>()
                 .HasIndex(c => c.Name)
                 .IsUnique();

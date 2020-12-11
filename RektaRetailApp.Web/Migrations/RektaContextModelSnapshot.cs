@@ -245,10 +245,27 @@ namespace RektaRetailApp.Web.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .HasColumnType("text");
 
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
                     b.Property<string>("NormalizedName")
+                        .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -285,6 +302,9 @@ namespace RektaRetailApp.Web.Migrations
                         .IsRequired()
                         .HasColumnType("character varying(50)")
                         .HasMaxLength(50);
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -364,6 +384,9 @@ namespace RektaRetailApp.Web.Migrations
                         .HasColumnType("character varying(450)")
                         .HasMaxLength(450);
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("character varying(50)")
@@ -416,6 +439,9 @@ namespace RektaRetailApp.Web.Migrations
                         .HasColumnType("character varying(50)")
                         .HasMaxLength(50);
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("character varying(50)")
@@ -461,13 +487,28 @@ namespace RektaRetailApp.Web.Migrations
                         .HasColumnType("character varying(450)")
                         .HasMaxLength(450);
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("character varying(50)")
                         .HasMaxLength(50);
 
+                    b.Property<float>("Quantity")
+                        .HasColumnType("real");
+
                     b.Property<DateTimeOffset>("SupplyDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("TotalCostValue")
+                        .HasColumnType("decimal(12,2)");
+
+                    b.Property<decimal>("TotalRetailValue")
+                        .HasColumnType("decimal(12,2)");
+
+                    b.Property<int>("UnitAmount")
+                        .HasColumnType("integer");
 
                     b.Property<DateTimeOffset>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -475,6 +516,9 @@ namespace RektaRetailApp.Web.Migrations
                     b.Property<string>("UpdatedBy")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("Verified")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
@@ -496,6 +540,9 @@ namespace RektaRetailApp.Web.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<string>("Comments")
+                        .HasColumnType("text");
+
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -503,10 +550,8 @@ namespace RektaRetailApp.Web.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("character varying(450)")
-                        .HasMaxLength(450);
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("ItemName")
                         .IsRequired()
@@ -516,7 +561,7 @@ namespace RektaRetailApp.Web.Migrations
                         .HasColumnType("integer");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(9,2)");
+                        .HasColumnType("decimal(12,2)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("integer");
@@ -552,6 +597,12 @@ namespace RektaRetailApp.Web.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<string>("Brand")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Comments")
+                        .HasColumnType("text");
+
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -559,8 +610,14 @@ namespace RektaRetailApp.Web.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("text");
+
                     b.Property<int?>("InventoryId")
                         .HasColumnType("integer");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -568,6 +625,9 @@ namespace RektaRetailApp.Web.Migrations
                         .HasMaxLength(50);
 
                     b.Property<float>("Quantity")
+                        .HasColumnType("real");
+
+                    b.Property<float>("ReorderPoint")
                         .HasColumnType("real");
 
                     b.Property<decimal>("RetailPrice")
@@ -582,6 +642,9 @@ namespace RektaRetailApp.Web.Migrations
                     b.Property<DateTimeOffset>("SupplyDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("UnitMeasure")
+                        .HasColumnType("integer");
+
                     b.Property<decimal>("UnitPrice")
                         .HasColumnType("decimal(12,2)");
 
@@ -591,6 +654,9 @@ namespace RektaRetailApp.Web.Migrations
                     b.Property<string>("UpdatedBy")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<bool>("Verified")
+                        .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
@@ -621,20 +687,26 @@ namespace RektaRetailApp.Web.Migrations
                         .HasColumnType("integer");
 
                     b.Property<decimal>("GrandTotal")
-                        .HasColumnType("decimal(9,2)");
+                        .HasColumnType("decimal(12,2)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("ModeOfPayment")
+                        .HasColumnType("integer");
 
                     b.Property<DateTimeOffset>("SaleDate")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("SaleType")
-                        .HasColumnType("integer");
 
                     b.Property<string>("SalesPersonId")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<decimal>("SubTotal")
-                        .HasColumnType("decimal(9,2)");
+                        .HasColumnType("decimal(12,2)");
+
+                    b.Property<int>("TypeOfSale")
+                        .HasColumnType("integer");
 
                     b.Property<DateTimeOffset>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -669,7 +741,10 @@ namespace RektaRetailApp.Web.Migrations
                         .HasColumnType("text");
 
                     b.Property<decimal>("HourlyRate")
-                        .HasColumnType("decimal(9,2)");
+                        .HasColumnType("decimal(12,2)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -707,8 +782,14 @@ namespace RektaRetailApp.Web.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("character varying(500)")
+                        .HasMaxLength(500);
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("MobileNumber")
-                        .IsRequired()
                         .HasColumnType("character varying(50)")
                         .HasMaxLength(50);
 
@@ -752,6 +833,9 @@ namespace RektaRetailApp.Web.Migrations
 
                     b.Property<int>("Id")
                         .HasColumnType("integer");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTimeOffset>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");

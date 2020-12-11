@@ -25,5 +25,4 @@ namespace RektaRetailApp.Web.Helpers
             
         }
     }
-
 }
