@@ -12,15 +12,30 @@ using RektaRetailApp.Web.Data;
 
 namespace RektaRetailApp.Web.Abstractions
 {
-    public class GenericBaseRepository : IRepository
-    {
-        private readonly IHttpContextAccessor _accessor;
-        private readonly RektaContext _db;
+  public class GenericBaseRepository : IRepository
+  {
+    private readonly IHttpContextAccessor _accessor;
+    private readonly RektaContext _db;
 
-        public GenericBaseRepository(IHttpContextAccessor accessor, RektaContext db)
+    public GenericBaseRepository(IHttpContextAccessor accessor, RektaContext db)
+    {
+      _accessor = accessor;
+      _db = db;
+    }
+    public async Task Commit<T>() where T : BaseDomainModel
+    {
+      var user = _accessor.HttpContext.User.Identity.Name ?? "Anonymous User";
+      foreach (var entity in _db.ChangeTracker.Entries<T>())
+      {
+        if (entity.State == EntityState.Added)
         {
-            _accessor = accessor;
-            _db = db;
+          entity.Entity.CreatedAt = DateTimeOffset.Now.LocalDateTime;
+          entity.Entity.UpdatedAt = DateTimeOffset.Now.LocalDateTime;
+          if (string.IsNullOrEmpty(entity.Entity.CreatedBy))
+          {
+            entity.Entity.CreatedBy = user;
+            entity.Entity.UpdatedBy = user;
+          }
         }
         public async Task Commit<T>(CancellationToken token) where T : BaseDomainModel
         {
@@ -71,4 +86,5 @@ namespace RektaRetailApp.Web.Abstractions
             return result;
         }
     }
+  }
 }

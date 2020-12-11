@@ -38,7 +38,6 @@ namespace RektaRetailApp.Web.Helpers
             AddRange(items);
         }
 
-
         public PagedList()
         {
             

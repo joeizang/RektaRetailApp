@@ -16,7 +16,7 @@ namespace RektaRetailApp.Web.Commands.Product
 {
     public class CreateProductCommand : IRequest<Response<ProductDetailApiModel>>
     {
-        public string Name { get; set; } = null!;
+         public string Name { get; set; } = null!;
 
         public decimal RetailPrice { get; set; }
 

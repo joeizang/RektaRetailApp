@@ -1,9 +1,20 @@
+<<<<<<< HEAD
 using System;
 using System.Collections.Generic;
 
 namespace RektaRetailApp.Web.ApiModel
 {
         public class Response<T> where T : class
+=======
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace RektaRetailApp.Web.ApiModel
+{
+    public class Response<T> where T : class
+>>>>>>> f2bb3482437b8fec14273b933964d84289e28e8f
     {
         public T Data { get; } = null!;
 
@@ -24,10 +35,14 @@ namespace RektaRetailApp.Web.ApiModel
             if (errors == null || CurrentResponseStatus == ResponseStatus.Success) return;
             Errors?.Add(errors);
 <<<<<<< HEAD
+<<<<<<< HEAD
             CurrentResponseStatus = ResponseStatus.NonAction;
 =======
             CurrentResponseStatus = ResponseStatus.Failure;
 >>>>>>> e3390aa (finished with backend features for suppliers. Working on frontend features for suppliers)
+=======
+            CurrentResponseStatus = ResponseStatus.Failure;
+>>>>>>> f2bb3482437b8fec14273b933964d84289e28e8f
             Errors?.Add(new
             {
                 ErrorMessage = "The response is assuming an invalid state and has been defaulted to a state of fault!"
@@ -39,6 +54,7 @@ namespace RektaRetailApp.Web.ApiModel
     {
         public static string Success { get; } = nameof(Success);
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
         public static string Error { get; } = nameof(Error);
@@ -65,6 +81,11 @@ namespace RektaRetailApp.Web.ApiModel
 >>>>>>> a4e57b3 (enabled soft delete feature. Enabled domain events to carry basic logs within them. Fixing Product persistence features)
 
         public static string Failure { get; } = nameof(Failure);
+=======
+        public static string Error { get; } = nameof(Error);
+
+        public static string Failure { get; } = nameof(Failure);
+>>>>>>> f2bb3482437b8fec14273b933964d84289e28e8f
     }
 
 
@@ -76,5 +97,8 @@ namespace RektaRetailApp.Web.ApiModel
 
         public static string Deletion { get; } = nameof(Deletion);
     }
+<<<<<<< HEAD
 >>>>>>> 5ffa05a (implement soft delete on all DomainEntities.)
+=======
+>>>>>>> f2bb3482437b8fec14273b933964d84289e28e8f
 }
