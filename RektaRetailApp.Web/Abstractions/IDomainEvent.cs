@@ -8,6 +8,8 @@ namespace RektaRetailApp.Web.Abstractions
 {
     public interface IDomainEvent : INotification
     {
-        public DateTimeOffset HappenedAt { get; }
+        DateTimeOffset HappenedAt { get; }
+        string ActionPerformed { get; }
+        object? PayLoad { get; }        
     }
 }

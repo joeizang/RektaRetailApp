@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Linq;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -22,6 +23,8 @@ namespace RektaRetailApp.Domain.DomainModels
         public string? Description { get; set; }
 
         public string? BatchNumber { get; set; }
+
+        public float Quantity => InventoryItems.Sum(q => q.Quantity);
 
         [ForeignKey(nameof(Category))]
         public int CategoryId { get; set; }

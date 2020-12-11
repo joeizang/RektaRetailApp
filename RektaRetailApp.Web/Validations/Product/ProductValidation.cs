@@ -20,7 +20,7 @@ namespace RektaRetailApp.Web.Validations
                 .GreaterThanOrEqualTo(decimal.MaxValue).WithMessage("The value you entered is too large")
                 .LessThanOrEqualTo(0).WithMessage("The number you have entered is too small")
                 .ScalePrecision(12, 4, true);
-            RuleFor(p => p.SuppliedPrice)
+            RuleFor(p => p.CostPrice)
                 .GreaterThanOrEqualTo(decimal.MaxValue).WithMessage("The value you entered is too large")
                 .LessThanOrEqualTo(0).WithMessage("The number you have entered is too small")
                 .ScalePrecision(12, 4, true);
@@ -32,8 +32,6 @@ namespace RektaRetailApp.Web.Validations
                 .NotEqual(0).WithMessage("Product Identifier cannot be 0");
             RuleFor(p => p.ProductCategories)
                 .NotNull().WithMessage("Categories must be initialized");
-            RuleFor(p => p.ProductSupplier)
-                .NotNull().WithMessage("A Product must have a supplier!");
         }
     }
 }

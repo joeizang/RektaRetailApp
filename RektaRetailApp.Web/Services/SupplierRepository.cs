@@ -48,7 +48,7 @@ namespace RektaRetailApp.Web.Services
             throw new NotImplementedException();
         }
 
-        public Task CreateSupplierAsync(CreateSupplierCommand command)
+        public async Task CreateSupplierAsync(CreateSupplierCommand command)
         {
             var supplier = _mapper.Map<CreateSupplierCommand, Supplier>(command);
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Threading;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -6,23 +7,26 @@ using System.Threading.Tasks;
 using RektaRetailApp.Domain.DomainModels;
 using RektaRetailApp.Web.ApiModel.Product;
 using RektaRetailApp.Web.Commands.Product;
+using RektaRetailApp.Web.Queries.Product;
+using RektaRetailApp.Web.Helpers;
 
 namespace RektaRetailApp.Web.Abstractions.Entities
 {
     public interface IProductRepository : IRepository
     {
-        Task<IEnumerable<ProductApiModel>> GetAllProductsAsync();
+        Task<PagedList<ProductApiModel>> GetAllProducts(GetAllProductsQuery query, CancellationToken token);
 
-        Task<ProductDetailApiModel> GetProductByIdAsync(int id);
+        Task<Product> GetProductByIdAsync(int id, CancellationToken token);
 
-        Task<ProductApiModel> GetProductByAsync(params Expression<Func<Product, bool>>[] searchTerms);
+        Task<Product> GetProductByAsync(CancellationToken token, Expression<Func<Product, object>>[]? includes,
+            params Expression<Func<Product, bool>>[] searchTerms);
 
-        Task<ProductApiModel> CreateProductAsync(CreateProductCommand command);
+        Task CreateProductAsync(CreateProductCommand command, CancellationToken token);
 
-        Task<ProductApiModel> UpdateProductAsync(UpdateProductCommand command);
+        Task UpdateProductAsync(UpdateProductCommand command, CancellationToken token);
 
-        Task DeleteProductAsync(DeleteProductCommand command);
+        void DeleteProductAsync(DeleteProductCommand command);
 
-        Task SaveAsync();
+        Task SaveAsync(CancellationToken token);
     }
 }

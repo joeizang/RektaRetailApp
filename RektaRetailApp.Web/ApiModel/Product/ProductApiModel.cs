@@ -6,30 +6,51 @@ using RektaRetailApp.Web.ApiModel.Category;
 
 namespace RektaRetailApp.Web.ApiModel.Product
 {
-    public class ProductApiModel
+public class ProductApiModel
     {
-        public ProductApiModel(int supplierId, float quantity, decimal suppliedPrice, decimal unitPrice, decimal retailPrice)
+        public ProductApiModel(string name, float quantity, decimal suppliedPrice, decimal retailPrice, int id)
         {
-            SupplierId = supplierId;
+            Name = name;
             Quantity = quantity;
-            SuppliedPrice = suppliedPrice;
-            UnitPrice = unitPrice;
+            CostPrice = suppliedPrice;
             RetailPrice = retailPrice;
             ProductCategories = new List<CategoryApiModel>();
+            Id = id;
         }
-        public string Name { get; } = null!;
+
+        public ProductApiModel()
+        {
+            ProductCategories = new List<CategoryApiModel>();
+        }
+        public string? Name { get; }
+
+        public int Id { get; set; }
 
         public decimal RetailPrice { get; }
 
-        public decimal UnitPrice { get; }
-
-        public decimal SuppliedPrice { get; }
+        public decimal CostPrice { get; }
 
         public float Quantity { get; }
 
         public List<CategoryApiModel> ProductCategories { get; }
+    }
 
-        public int SupplierId { get; }
+    public class ProductsForSaleApiModel
+    {
+        public int Id { get; set; }
+
+        public string? Name { get; set; }
+
+        public decimal Price { get; set; }
+    }
+
+    public class ProductSummaryApiModel
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; } = string.Empty;
+
+        public float Quantity { get; set; }
     }
 
     public class CreateProductApiModel
@@ -64,34 +85,33 @@ namespace RektaRetailApp.Web.ApiModel.Product
 
     public class ProductDetailApiModel
     {
-        public ProductDetailApiModel(decimal retailPrice, decimal unitPrice, 
-            float quantity, decimal suppliedPrice, string supplierName, string mobileNumber, DateTimeOffset supplyDate)
+        public ProductDetailApiModel(decimal retailPrice, string name, float quantity, decimal suppliedPrice, DateTimeOffset supplyDate, int id)
         {
+            Name = name;
             RetailPrice = retailPrice;
-            UnitPrice = unitPrice;
             Quantity = quantity;
-            SuppliedPrice = suppliedPrice;
+            CostPrice = suppliedPrice;
             ProductCategories = new List<CategoryApiModel>();
-            SupplierName = supplierName;
-            MobileNumber = mobileNumber;
             SupplyDate = supplyDate;
+            Id = id;
         }
+
+        public ProductDetailApiModel()
+        {
+            ProductCategories = new List<CategoryApiModel>();
+        }
+
+        public int Id { get; set; }
 
         public string Name { get; } = null!;
 
         public decimal RetailPrice { get; }
 
-        public decimal UnitPrice { get; }
-
         public float Quantity { get; }
 
-        public decimal SuppliedPrice { get; }
+        public decimal CostPrice { get; }
 
         public List<CategoryApiModel> ProductCategories { get; }
-
-        public string SupplierName { get; }
-
-        public string MobileNumber { get; }
 
         public DateTimeOffset SupplyDate { get; }
     }
