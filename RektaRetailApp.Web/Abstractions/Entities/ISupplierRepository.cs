@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using RektaRetailApp.Domain.DomainModels;
 using RektaRetailApp.Web.ApiModel.Supplier;
@@ -13,17 +14,19 @@ namespace RektaRetailApp.Web.Abstractions.Entities
 {
     public interface ISupplierRepository : IRepository
     {
-        Task SaveAsync();
+        Task SaveAsync(CancellationToken token);
 
-        Task<PagedList<SupplierApiModel>> GetSuppliersAsync(GetAllSuppliersQuery query);
+        Task<PagedList<SupplierApiModel>> GetSuppliersAsync(GetAllSuppliersQuery query, CancellationToken token);
 
-        Task<Supplier> GetSupplierById(int id);
+        Task<Supplier> GetSupplierById(int id, CancellationToken token);
 
-        Task<Supplier> GetSupplierBy(Expression<Func<Supplier, object>>[]? includes = null, params Expression<Func<Supplier, bool>>[] searchTerms);
+        Task<Supplier> GetSupplierBy(CancellationToken token, Expression<Func<Supplier, object>>[]? includes = null,
+            params Expression<Func<Supplier, bool>>[] searchTerms);
 
-        Task CreateSupplierAsync(CreateSupplierCommand command);
+        void CreateSupplier(CreateSupplierCommand command);
 
         void UpdateSupplier(UpdateSupplierCommand command);
-        void DeleteSupplier(int id);
+        
+        Task DeleteSupplier(int id, CancellationToken token);
     }
 }

@@ -30,7 +30,7 @@ namespace RektaRetailApp.Web.Validations.Product
                 .GreaterThanOrEqualTo(float.MaxValue)
                 .WithMessage("The value you entered for Reorder Point is too large")
                 .LessThanOrEqualTo(0).WithMessage("The number you have entered for Reorder Point is too small");
-            RuleFor(p => p.SuppliedPrice)
+            RuleFor(p => p.CostPrice)
                 .GreaterThanOrEqualTo(decimal.MaxValue).WithMessage("The value you entered is too large")
                 .LessThanOrEqualTo(0).WithMessage("The number you have entered is too small")
                 .ScalePrecision(12, 4, true);
@@ -38,8 +38,6 @@ namespace RektaRetailApp.Web.Validations.Product
                 .GreaterThanOrEqualTo(decimal.MaxValue).WithMessage("The value you entered is too large")
                 .LessThanOrEqualTo(0).WithMessage("The number you have entered is too small")
                 .ScalePrecision(12, 4, true);
-            RuleFor(p => p.SupplierId)
-                .NotEqual(0).WithMessage("Product Identifier cannot be 0");
             RuleFor(p => p.SupplyDate)
                 .GreaterThan(DateTimeOffset.MinValue)
                 .WithMessage("Supply Date has to be an actual date!");

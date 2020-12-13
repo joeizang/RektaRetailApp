@@ -25,14 +25,9 @@ namespace RektaRetailApp.Domain.DomainModels
 
         public UnitMeasure UnitAmount { get; set; }
 
-        public float Quantity { get; set; }
-
         public decimal TotalCostValue { get; private set; }
 
         public float Quantity => InventoryItems.Sum(q => q.Quantity);
-
-        [ForeignKey(nameof(Category))]
-        public int CategoryId { get; set; }
 
         public bool Verified { get; set; }
 
@@ -56,13 +51,12 @@ namespace RektaRetailApp.Domain.DomainModels
         {
             if (InventoryItems.Any())
             {
-                TotalCostValue = InventoryItems.Sum(x => x.SuppliedPrice);
+                TotalCostValue = InventoryItems.Sum(x => x.CostPrice);
                 TotalRetailValue = InventoryItems.Sum(x => x.RetailPrice);
 
             }
-            TotalCostValue = 0;
-            TotalRetailValue = 0;
         }
 
+        public decimal TotalRetailValue { get; private set; }
     }
 }

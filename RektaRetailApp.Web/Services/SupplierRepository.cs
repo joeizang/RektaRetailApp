@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -35,22 +36,22 @@ namespace RektaRetailApp.Web.Services
       _mapper = mapper;
     }
 
-    public Task SaveAsync()
+    public Task SaveAsync(CancellationToken token)
     {
-      return Commit<Supplier>();
+      return Commit<Supplier>(token);
     }
 
-    public Task<PagedList<SupplierApiModel>> GetSuppliersAsync(GetAllSuppliersQuery query)
+    public async Task<PagedList<SupplierApiModel>> GetSuppliersAsync(GetAllSuppliersQuery query, CancellationToken token)
     {
       IQueryable<Supplier> suppliers = _set.AsNoTracking();
 
-      if (query.SearchTerm is null)
+      if (string.IsNullOrEmpty(query.SearchTerm))
       {
         if (query.PageSize is null || query.PageNumber is null)
-          return suppliers.ProjectTo<SupplierApiModel>(_mapper.ConfigurationProvider)
-              .PaginatedListAsync(1, 10);
-        var result = suppliers.ProjectTo<SupplierApiModel>(_mapper.ConfigurationProvider)
-            .PaginatedListAsync(query.PageNumber.Value, query.PageSize.Value);
+          return await suppliers.ProjectTo<SupplierApiModel>(_mapper.ConfigurationProvider)
+              .PaginatedListAsync(1, 10, token);
+        var result = await suppliers.ProjectTo<SupplierApiModel>(_mapper.ConfigurationProvider)
+            .PaginatedListAsync(query.PageNumber.Value, query.PageSize.Value, token);
         return result;
       }
 
@@ -58,32 +59,35 @@ namespace RektaRetailApp.Web.Services
                                        s.Name.Equals(query.SearchTerm) &&
                                        s.MobileNumber.Equals(query.SearchTerm));
       if (query.PageSize == null && query.PageNumber == null)
-        return suppliers.ProjectTo<SupplierApiModel>(_mapper.ConfigurationProvider)
-            .PaginatedListAsync(1, 10);
-      var supplierResults = suppliers.ProjectTo<SupplierApiModel>(_mapper.ConfigurationProvider)
-          .PaginatedListAsync(query.PageNumber!.Value, query.PageSize!.Value);
+        return await suppliers.ProjectTo<SupplierApiModel>(_mapper.ConfigurationProvider)
+            .PaginatedListAsync(1, 10, token);
+      var supplierResults = await suppliers.ProjectTo<SupplierApiModel>(_mapper.ConfigurationProvider)
+          .PaginatedListAsync(query.PageNumber!.Value, query.PageSize!.Value, token);
       return supplierResults;
     }
 
-    public Task<Supplier> GetSupplierById(int id)
+    public async Task<Supplier> GetSupplierById(int id, CancellationToken token)
     {
-      return _set.AsNoTracking().Include(s => s.ProductsSupplied).SingleOrDefaultAsync(s => s.Id == id);
+      return await _set.AsNoTracking()
+          .Include(s => s.ProductsSupplied)
+          .SingleOrDefaultAsync(s => s.Id == id, token)
+          .ConfigureAwait(false);
     }
 
-    public Task<Supplier> GetSupplierBy(Expression<Func<Supplier, object>>[]? includes = null,
+    public async Task<Supplier> GetSupplierBy(CancellationToken token, Expression<Func<Supplier, object>>[]? includes = null,
         params Expression<Func<Supplier, bool>>[] searchTerms)
     {
-      var supplier = GetOneBy<Supplier>(includes, searchTerms);
+        var supplier = await GetOneBy<Supplier>(token, includes, searchTerms).ConfigureAwait(false);
       return supplier;
     }
 
-    public Task CreateSupplierAsync(CreateSupplierCommand command)
+    public void CreateSupplier(CreateSupplierCommand command)
     {
       var supplier = _mapper.Map<CreateSupplierCommand, Supplier>(command);
       supplier.Name = supplier.Name!.Trim().ToUpperInvariant();
       supplier.MobileNumber = supplier.MobileNumber!.Trim().ToUpperInvariant();
       supplier.Description = supplier.Description!.Trim().ToUpperInvariant();
-      return Task.Run(() => _set.Attach(supplier));
+      _set.Attach(supplier);
     }
 
     public void UpdateSupplier(UpdateSupplierCommand command)
@@ -97,13 +101,12 @@ namespace RektaRetailApp.Web.Services
       _db.Entry(exists).State = EntityState.Modified;
     }
 
-        public async Task CreateSupplierAsync(CreateSupplierCommand command)
-        {
-            var supplier = _mapper.Map<CreateSupplierCommand, Supplier>(command);
-            return Task.Run(() => _set.Add(supplier));
-        }
+    public async Task DeleteSupplier(int id, CancellationToken token)
+    {
+        var supplier = await _set.SingleOrDefaultAsync(x => x.Id == id, token)
+            .ConfigureAwait(false);
+        supplier.IsDeleted = true;
+        _db.Entry(supplier).State = EntityState.Modified;
     }
-
-
   }
 }

@@ -102,7 +102,7 @@ namespace RektaRetailApp.Web.Data
                 .Property(p => p.RetailPrice)
                 .HasColumnType("decimal(12,2)");
             builder.Entity<Product>()
-                .Property(p => p.SuppliedPrice)
+                .Property(p => p.CostPrice)
                 .HasColumnType("decimal(12,2)");
             builder.Entity<Product>()
                 .Property(p => p.UnitPrice)

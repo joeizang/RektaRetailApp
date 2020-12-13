@@ -65,17 +65,10 @@ namespace RektaRetailApp.Web.Controllers
 
         // POST api/<ProductsController>
         [HttpPost]
-<<<<<<< HEAD
         public async Task<ActionResult<Response<ProductDetailApiModel>>> CreateProduct(CreateProductCommand command)
         {
             var result = await _mediator.Send(command);
             return CreatedAtRoute("GetProductById", new { id = result.Data.Id}, result);
-=======
-        public async Task<ActionResult<Response<ProductApiModel>>> CreateProduct(CreateProductCommand command)
-        {
-            var result = await _mediator.Send(command);
-            return CreatedAtRoute("GetProductById", result);
->>>>>>> f2bb3482437b8fec14273b933964d84289e28e8f
         }
 
         //// PUT api/<ProductsController>/5

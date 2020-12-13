@@ -21,7 +21,7 @@ namespace RektaRetailApp.Web.Validations.Product
           .GreaterThanOrEqualTo(decimal.MaxValue).WithMessage("The value you entered is too large")
           .LessThanOrEqualTo(0).WithMessage("The number you have entered is too small")
           .ScalePrecision(12, 4, true);
-      RuleFor(p => p.SuppliedPrice)
+      RuleFor(p => p.CostPrice)
           .GreaterThanOrEqualTo(decimal.MaxValue).WithMessage("The value you entered is too large")
           .LessThanOrEqualTo(0).WithMessage("The number you have entered is too small")
           .ScalePrecision(12, 4, true);

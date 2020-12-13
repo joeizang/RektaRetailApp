@@ -25,8 +25,8 @@ namespace RektaRetailApp.Web.Commands.Supplier
 
         public async Task<Unit> Handle(DeleteSupplierCommand request, CancellationToken cancellationToken)
         {
-            _repo.DeleteSupplier(request.Id);
-            await _repo.SaveAsync();
+            await _repo.DeleteSupplier(request.Id, cancellationToken).ConfigureAwait(false);
+            await _repo.SaveAsync(cancellationToken);
             return default;
         }
     }

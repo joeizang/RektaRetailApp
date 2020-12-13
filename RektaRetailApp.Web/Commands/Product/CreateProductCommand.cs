@@ -31,11 +31,6 @@ namespace RektaRetailApp.Web.Commands.Product
         public string? Brand { get; set; }
 
         public string? ImageUrl { get; set; }
-
-        public string? Brand { get; set; }
-
-        public string? Comments { get; set; }
-
         public DateTimeOffset SupplyDate { get; set; }
 
         public int InventoryId { get; set; }
@@ -47,10 +42,6 @@ namespace RektaRetailApp.Web.Commands.Product
         public string? CategoryName { get; set; }
 
         public int SupplierId { get; set; }
-
-        public UnitMeasure UnitMeasure { get; set; }
-
-        public bool Verified { get; set; }
 
     }
 
@@ -80,8 +71,9 @@ namespace RektaRetailApp.Web.Commands.Product
                 var product = await _repo.GetProductByAsync(cancellationToken, includes, p => p.Name.Equals(request.Name.ToUpperInvariant()),
                     p => p.RetailPrice == request.RetailPrice, p => p.CostPrice == request.CostPrice);
 
-                var model = new ProductDetailApiModel(product.RetailPrice, product.Name, product.Quantity,
-                    product.CostPrice, product.SupplyDate, product.Id);
+                var model = new ProductDetailApiModel(product.RetailPrice, product.UnitPrice, product.Name, product.Quantity,
+                    product.CostPrice, product.Supplier?.Name, product.Supplier?.MobileNumber,
+                    product.ImageUrl,  product.SupplyDate, product.Id);
                 var result = new Response<ProductDetailApiModel>(model, ResponseStatus.Success);
                 var createEvent = new ProductCreateEvent(model);
                 await _mediator.Publish(createEvent, cancellationToken);

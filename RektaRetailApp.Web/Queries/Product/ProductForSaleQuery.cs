@@ -11,12 +11,12 @@ using RektaRetailApp.Web.Data;
 
 namespace RektaRetailApp.Web.Queries.Product
 {
-    public class GetProductsForSaleQuery : IRequest<Response<IEnumerable<ProductsForSaleApiModel>>>
+    public class GetProductsForSaleQuery : IRequest<ApiModel.Response<IEnumerable<ProductsForSaleApiModel>>>
     {
     }
 
 
-    public class GetProductsForSaleQueryHandler : IRequestHandler<GetProductsForSaleQuery, Response<IEnumerable<ProductsForSaleApiModel>>>
+    public class GetProductsForSaleQueryHandler : IRequestHandler<GetProductsForSaleQuery, ApiModel.Response<IEnumerable<ProductsForSaleApiModel>>>
     {
         private readonly RektaContext _db;
 
@@ -24,7 +24,7 @@ namespace RektaRetailApp.Web.Queries.Product
         {
             _db = db;
         }
-        public async Task<Response<IEnumerable<ProductsForSaleApiModel>>> Handle(GetProductsForSaleQuery request, CancellationToken cancellationToken)
+        public async Task<ApiModel.Response<IEnumerable<ProductsForSaleApiModel>>> Handle(GetProductsForSaleQuery request, CancellationToken cancellationToken)
         {
             try
             {
@@ -36,12 +36,12 @@ namespace RektaRetailApp.Web.Queries.Product
                         Price = p.RetailPrice
                     }).ToListAsync(cancellationToken)
                     .ConfigureAwait(false);
-                var result = new Response<IEnumerable<ProductsForSaleApiModel>>(work, ResponseStatus.Success);
+                var result = new ApiModel.Response<IEnumerable<ProductsForSaleApiModel>>(work, ResponseStatus.Success);
                 return result;
             }
             catch (Exception e)
             {
-                return new Response<IEnumerable<ProductsForSaleApiModel>>(
+                return new ApiModel.Response<IEnumerable<ProductsForSaleApiModel>>(
                     new List<ProductsForSaleApiModel>(), ResponseStatus.Error, new { ErrorMessage = e.Message} );
             }
         }
