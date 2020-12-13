@@ -20,6 +20,10 @@ namespace RektaRetailApp.Web.Commands.Product
 
         public decimal RetailPrice { get; set; }
 
+        public decimal UnitPrice { get; set; }
+
+        public float ReorderPoint { get; set; }
+
         public decimal CostPrice { get; set; }
 
         public DateTimeOffset SupplyDate { get; set; }

@@ -32,22 +32,24 @@ namespace RektaRetailApp.Web.Services
             _set = _db.Products;
         }
 
-        public async Task<PagedList<ProductApiModel>> GetAllProductsAsync(GetAllProductsQuery query, CancellationToken token)
+        public async Task<PagedList<ProductApiModel>> GetAllProducts(GetAllProductsQuery query, CancellationToken token)
         {
             IQueryable<Product> products = _set.AsNoTracking();
             IQueryable<ProductApiModel> tempPaged;
-            if (!(query.PageNumber is null) && !(query.PageSize is null) || !(query.SearchTerm is null))
+            if (!string.IsNullOrEmpty(query.SearchTerm))
             {
-                products = products.Where(p => p.Brand!.Contains(query.SearchTerm!.Trim().ToUpperInvariant())
-                                               && p.Name.Contains(query.SearchTerm));
-                tempPaged = products.Select(p => new ProductApiModel(p.Name, p.Quantity, p.CostPrice, p.RetailPrice, p.Id));
+                products = products.Where(p => p.Brand!.Contains(query.SearchTerm.Trim().ToUpperInvariant())
+                                               && p.Name.Contains(query.SearchTerm.Trim().ToUpperInvariant()));
+                tempPaged = products.Select(p => new ProductApiModel(p.Name,p.SupplierId,
+                    p.Quantity, p.CostPrice, p.UnitPrice, p.RetailPrice, p.Id));
                 var paged = await PagedList<ProductApiModel>
-                    .CreatePagedList(tempPaged, query.PageNumber!.Value, query.PageSize!.Value, token).ConfigureAwait(false);
+                    .CreatePagedList(tempPaged, query.PageNumber, query.PageSize, token).ConfigureAwait(false);
                 return paged;
 
             }
 
-            tempPaged = products.Select(p => new ProductApiModel(p.Name, p.Quantity, p.CostPrice, p.RetailPrice, p.Id));
+            tempPaged = products.Select(p => new ProductApiModel(p.Name, p.SupplierId, p.Quantity,
+                p.CostPrice, p.UnitPrice,p.RetailPrice, p.Id));
             var pagedProducts = await PagedList<ProductApiModel>
                 .CreatePagedList(tempPaged, 1, 10, token).ConfigureAwait(false);
             return pagedProducts;
@@ -80,7 +82,7 @@ namespace RektaRetailApp.Web.Services
             product.Comments = product.Comments?.Trim().ToUpperInvariant();
             var inventory = await _db.Inventories.SingleOrDefaultAsync(x => x.Id == product.InventoryId, token)
                 .ConfigureAwait(false);
-            inventory.Quantity += product.Quantity;
+            // inventory.Quantity += product.Quantity;
             _set.Attach(product);
         }
 

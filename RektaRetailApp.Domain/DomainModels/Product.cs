@@ -22,6 +22,8 @@ namespace RektaRetailApp.Domain.DomainModels
         [Required]
         public decimal RetailPrice { get; set; }
 
+        public float ReOrderPoint { get; set; }
+
         [Required]
         [Column(TypeName = "decimal(12,2)")]
         public decimal CostPrice { get; set; }
@@ -37,6 +39,8 @@ namespace RektaRetailApp.Domain.DomainModels
         public float Quantity { get; set; }
 
         public string? Brand { get; set; }
+
+        public string? ImageUrl { get; set; } = string.Empty;
 
         public string? Comments { get; set; }
 

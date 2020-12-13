@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
 using AutoMapper;
@@ -130,9 +131,9 @@ namespace RektaRetailApp.Web.Services
         _set.Remove(result);
     }
 
-    public async Task SaveAsync()
+    public async Task SaveAsync(CancellationToken token)
     {
-      await Commit<Inventory>().ConfigureAwait(false);
+      await Commit<Inventory>(token).ConfigureAwait(false);
     }
   }
 }

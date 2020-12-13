@@ -29,7 +29,7 @@ namespace RektaRetailApp.Web.Queries.Supplier
         }
         public async Task<Response<SupplierDetailApiModel>> Handle(GetSupplierByIdQuery request, CancellationToken cancellationToken)
         {
-            var supplier = await _repo.GetSupplierById(request.Id);
+            var supplier = await _repo.GetSupplierById(request.Id, cancellationToken).ConfigureAwait(false);
             var model = _mapper.Map<SupplierDetailApiModel>(supplier);
             var result = new Response<SupplierDetailApiModel>(model, ResponseStatus.Success);
             return result;

@@ -43,23 +43,32 @@ namespace RektaRetailApp.Web.Queries.Supplier
     }
     public async Task<PaginatedResponse<SupplierApiModel>> Handle(GetAllSuppliersQuery request, CancellationToken cancellationToken)
     {
-      var pagedResult = await _repo.GetSuppliersAsync(request).ConfigureAwait(false);
+      try
+      {
+            var pagedResult = await _repo.GetSuppliersAsync(request, cancellationToken)
+                        .ConfigureAwait(false);
 
-      var prev = _ugen.AddQueryStringParams("pageNumber", (request.PageNumber - 1).ToString()!);
-      prev.AddQueryStringParams("pageSize", request.PageSize.ToString()!);
-      var nextL = _ugen.AddQueryStringParams("pageNumber", (request.PageNumber + 1).ToString()!);
-      nextL.AddQueryStringParams("pageSize", request.PageSize.ToString()!);
+            var prev = _ugen.AddQueryStringParams("pageNumber", (request.PageNumber - 1).ToString()!);
+            prev.AddQueryStringParams("pageSize", request.PageSize.ToString()!);
+            var nextL = _ugen.AddQueryStringParams("pageNumber", (request.PageNumber + 1).ToString()!);
+            nextL.AddQueryStringParams("pageSize", request.PageSize.ToString()!);
 
-      var prevLink = pagedResult.HasPrevious
-          ? prev.GenerateUri() : null;
-      var nextLink = pagedResult.HasNext
-          ? nextL.GenerateUri() : null;
+            var prevLink = pagedResult.HasPrevious
+                ? prev.GenerateUri() : null;
+            var nextLink = pagedResult.HasNext
+                ? nextL.GenerateUri() : null;
 
 
-      var result = new PaginatedResponse<SupplierApiModel>(pagedResult,
-          pagedResult.TotalCount, pagedResult.PageSize, pagedResult.CurrentPage,
-          prevLink?.AbsolutePath, nextLink?.AbsolutePath);
-      return result;
+            var result = new PaginatedResponse<SupplierApiModel>(pagedResult,
+                pagedResult.TotalCount, pagedResult.PageSize, pagedResult.CurrentPage,
+                prevLink?.AbsolutePath, nextLink?.AbsolutePath, ResponseStatus.Success);
+            return result;
+      }
+      catch (System.Exception e)
+      {
+          return new PaginatedResponse<SupplierApiModel>(
+              new PagedList<SupplierApiModel>(),ResponseStatus.Error, new { ErrorMessage = e.Message});
+      }
     }
   }
 }

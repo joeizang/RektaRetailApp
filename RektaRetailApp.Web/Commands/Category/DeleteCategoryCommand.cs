@@ -26,7 +26,7 @@ namespace RektaRetailApp.Web.Commands.Category
         public async Task<Unit> Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
         {
             await _repo.Delete(new DeleteCategoryApiModel { Id = request.Id }).ConfigureAwait(false);
-            await _repo.SaveAsync().ConfigureAwait(false);
+            await _repo.SaveAsync(cancellationToken).ConfigureAwait(false);
             return default;
         }
     }

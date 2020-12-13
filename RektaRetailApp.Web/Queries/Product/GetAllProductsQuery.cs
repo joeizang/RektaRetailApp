@@ -14,11 +14,11 @@ namespace RektaRetailApp.Web.Queries.Product
 {
     public class GetAllProductsQuery : IRequest<PaginatedResponse<ProductApiModel>>
     {
-        public string? SearchTerm { get; set; }
+        public string SearchTerm { get; set; } = string.Empty;
 
-        public int? PageSize { get; set; }
+        public int PageSize { get; set; }
 
-        public int? PageNumber { get; set; }
+        public int PageNumber { get; set; }
 
         public string? Uri { get; set; }
 

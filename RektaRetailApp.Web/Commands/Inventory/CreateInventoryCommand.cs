@@ -38,7 +38,7 @@ namespace RektaRetailApp.Web.Commands.Inventory
     public async Task<InventoryApiModel> Handle(CreateInventoryCommand request, CancellationToken cancellationToken)
     {
       _repo.CreateInventory(request);
-      await _repo.SaveAsync().ConfigureAwait(false);
+      await _repo.SaveAsync(cancellationToken).ConfigureAwait(false);
       var result = await _repo
           .GetInventoryBy(x =>
               x.BatchNumber!.Equals(request.BatchNumber!.ToUpperInvariant()) &&

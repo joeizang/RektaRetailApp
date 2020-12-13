@@ -37,7 +37,7 @@ namespace RektaRetailApp.Web.Commands.Category
         {
             var model = _mapper.Map<CreateCategoryApiModel>(request);
             _repo.Create(model);
-            await _repo.SaveAsync().ConfigureAwait(false);
+            await _repo.SaveAsync(cancellationToken).ConfigureAwait(false);
             var response = await _repo.GetCategoryBy(model.Name, model.Description);
             return response;
         }

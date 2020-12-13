@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -96,9 +97,9 @@ namespace RektaRetailApp.Web.Services
       _db.Categories.Remove(category);
     }
 
-    public Task SaveAsync()
+    public async Task SaveAsync(CancellationToken token)
     {
-        await Commit<Category>().ConfigureAwait(false);
+        await Commit<Category>(token).ConfigureAwait(false);
     }
 
   }

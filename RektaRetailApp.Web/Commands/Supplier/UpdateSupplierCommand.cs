@@ -37,13 +37,20 @@ namespace RektaRetailApp.Web.Commands.Supplier
         }
         public async Task<Response<SupplierDetailApiModel>> Handle(UpdateSupplierCommand request, CancellationToken cancellationToken)
         {
-            _repo.UpdateSupplier(request);
-            await _repo.SaveAsync();
-            var temp = await _repo.GetSupplierById(request.Id);
-            var target = _mapper.Map<SupplierDetailApiModel>(temp);
-            var supplierUpdated = new Response<SupplierDetailApiModel>(target, ResponseStatus.Success);
-            await _mediator.Publish(new SupplierUpdatedEvent(request.Name, request.MobileNumber, request.Description),cancellationToken);
-            return supplierUpdated;
+            try
+            {
+                _repo.UpdateSupplier(request);
+                await _repo.SaveAsync(cancellationToken);
+                var temp = await _repo.GetSupplierById(request.Id, cancellationToken);
+                var target = _mapper.Map<SupplierDetailApiModel>(temp);
+                var supplierUpdated = new Response<SupplierDetailApiModel>(target, ResponseStatus.Success);
+                await _mediator.Publish(new SupplierUpdatedEvent(request.Name, request.MobileNumber, request.Description),cancellationToken);
+                return supplierUpdated;
+            }
+            catch (System.Exception e)
+            {
+                return new Response<SupplierDetailApiModel>(ResponseStatus.Error, new { ErrorMessage = e.Message });
+            }
         }
     }
 }

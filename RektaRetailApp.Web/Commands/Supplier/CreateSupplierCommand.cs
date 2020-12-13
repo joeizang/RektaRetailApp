@@ -37,10 +37,10 @@ namespace RektaRetailApp.Web.Commands.Supplier
         }
         public async Task<Response<SupplierApiModel>> Handle(CreateSupplierCommand request, CancellationToken cancellationToken)
         {
-            await _repo.CreateSupplierAsync(request).ConfigureAwait(false);
-            await _repo.SaveAsync().ConfigureAwait(false);
+            _repo.CreateSupplier(request);
+            await _repo.SaveAsync(cancellationToken).ConfigureAwait(false);
             var supplier = await _repo
-                .GetSupplierBy(null,s => s.MobileNumber!.Equals(request.PhoneNumber),
+                .GetSupplierBy(cancellationToken,null,s => s.MobileNumber!.Equals(request.PhoneNumber),
                     s => s.Name!.Equals(request.Name!.Trim().ToUpperInvariant())).ConfigureAwait(false);
             var model = _mapper.Map<SupplierApiModel>(supplier);
 
