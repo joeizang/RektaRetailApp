@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace RektaRetailApp.Web.Migrations
 {
-    public partial class InitialDb : Migration
+    public partial class InitialAppDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,7 +16,12 @@ namespace RektaRetailApp.Web.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(nullable: true),
                     NormalizedName = table.Column<string>(nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true)
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: false),
+                    UpdatedBy = table.Column<string>(nullable: false),
+                    CreatedAt = table.Column<DateTimeOffset>(nullable: false),
+                    UpdatedAt = table.Column<DateTimeOffset>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -47,6 +52,7 @@ namespace RektaRetailApp.Web.Migrations
                     UpdatedAt = table.Column<DateTimeOffset>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: false),
                     UpdatedBy = table.Column<string>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(maxLength: 50, nullable: false),
                     PhoneNumber = table.Column<string>(maxLength: 50, nullable: true),
                     Address = table.Column<string>(nullable: true),
@@ -103,9 +109,10 @@ namespace RektaRetailApp.Web.Migrations
                     UpdatedAt = table.Column<DateTimeOffset>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: false),
                     UpdatedBy = table.Column<string>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(maxLength: 50, nullable: false),
                     MobileNumber = table.Column<string>(maxLength: 50, nullable: true),
-                    Description = table.Column<string>(maxLength: 500, nullable: true)
+                    Description = table.Column<string>(maxLength: 200, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -122,10 +129,11 @@ namespace RektaRetailApp.Web.Migrations
                     UpdatedAt = table.Column<DateTimeOffset>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: false),
                     UpdatedBy = table.Column<string>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(nullable: false),
                     ShiftStartsAt = table.Column<DateTimeOffset>(nullable: false),
                     SiftEndsAt = table.Column<DateTimeOffset>(nullable: false),
-                    HourlyRate = table.Column<decimal>(type: "decimal(9,2)", nullable: false)
+                    HourlyRate = table.Column<decimal>(type: "decimal(12,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -177,7 +185,8 @@ namespace RektaRetailApp.Web.Migrations
                     OtherNames = table.Column<string>(maxLength: 50, nullable: false),
                     CurrentShiftId = table.Column<int>(nullable: false),
                     CreatedAt = table.Column<DateTimeOffset>(nullable: false),
-                    UpdatedAt = table.Column<DateTimeOffset>(nullable: false)
+                    UpdatedAt = table.Column<DateTimeOffset>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -285,26 +294,22 @@ namespace RektaRetailApp.Web.Migrations
                     UpdatedAt = table.Column<DateTimeOffset>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: false),
                     UpdatedBy = table.Column<string>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
                     SaleDate = table.Column<DateTimeOffset>(nullable: false),
                     SalesPersonId = table.Column<string>(nullable: false),
-                    SubTotal = table.Column<decimal>(type: "decimal(9,2)", nullable: false),
-                    GrandTotal = table.Column<decimal>(type: "decimal(9,2)", nullable: false),
+                    SubTotal = table.Column<decimal>(type: "decimal(12,2)", nullable: false),
+                    GrandTotal = table.Column<decimal>(type: "decimal(12,2)", nullable: false),
                     TypeOfSale = table.Column<int>(nullable: false),
-                    ModeOfPayment = table.Column<int>(nullable: false),
-                    CustomerId = table.Column<int>(nullable: false)
+                    CustomerName = table.Column<string>(maxLength: 50, nullable: true),
+                    CustomerPhoneNumber = table.Column<string>(maxLength: 50, nullable: true),
+                    ApplicationUserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Sales", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Sales_Customers_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Sales_AspNetUsers_SalesPersonId",
-                        column: x => x.SalesPersonId,
+                        name: "FK_Sales_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -320,15 +325,16 @@ namespace RektaRetailApp.Web.Migrations
                     UpdatedAt = table.Column<DateTimeOffset>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: false),
                     UpdatedBy = table.Column<string>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(maxLength: 50, nullable: false),
                     Description = table.Column<string>(maxLength: 450, nullable: true),
                     UnitAmount = table.Column<int>(nullable: false),
-                    Quantity = table.Column<float>(nullable: false),
-                    TotalValue = table.Column<decimal>(nullable: false),
+                    TotalCostValue = table.Column<decimal>(type: "decimal(12,2)", nullable: false),
                     Verified = table.Column<bool>(nullable: false),
                     BatchNumber = table.Column<string>(nullable: true),
                     CategoryId = table.Column<int>(nullable: false),
-                    SupplyDate = table.Column<DateTimeOffset>(nullable: false)
+                    SupplyDate = table.Column<DateTimeOffset>(nullable: false),
+                    TotalRetailValue = table.Column<decimal>(type: "decimal(12,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -345,20 +351,22 @@ namespace RektaRetailApp.Web.Migrations
                     UpdatedAt = table.Column<DateTimeOffset>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: false),
                     UpdatedBy = table.Column<string>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(maxLength: 50, nullable: false),
                     RetailPrice = table.Column<decimal>(type: "decimal(12,2)", nullable: false),
+                    ReOrderPoint = table.Column<float>(nullable: false),
+                    CostPrice = table.Column<decimal>(type: "decimal(12,2)", nullable: false),
                     UnitPrice = table.Column<decimal>(type: "decimal(12,2)", nullable: false),
-                    SuppliedPrice = table.Column<decimal>(type: "decimal(12,2)", nullable: false),
                     SupplyDate = table.Column<DateTimeOffset>(nullable: false),
                     Quantity = table.Column<float>(nullable: false),
-                    ReorderPoint = table.Column<float>(nullable: false),
-                    ImageUrl = table.Column<string>(nullable: true),
                     Brand = table.Column<string>(nullable: true),
+                    ImageUrl = table.Column<string>(nullable: true),
                     Comments = table.Column<string>(nullable: true),
                     UnitMeasure = table.Column<int>(nullable: false),
                     Verified = table.Column<bool>(nullable: false),
+                    InventoryId = table.Column<int>(nullable: false),
                     SupplierId = table.Column<int>(nullable: false),
-                    InventoryId = table.Column<int>(nullable: true)
+                    SaleId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -367,6 +375,12 @@ namespace RektaRetailApp.Web.Migrations
                         name: "FK_Products_Inventories_InventoryId",
                         column: x => x.InventoryId,
                         principalTable: "Inventories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Products_Sales_SaleId",
+                        column: x => x.SaleId,
+                        principalTable: "Sales",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -387,7 +401,8 @@ namespace RektaRetailApp.Web.Migrations
                     UpdatedAt = table.Column<DateTimeOffset>(nullable: false),
                     Id = table.Column<int>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: false),
-                    UpdatedBy = table.Column<string>(nullable: false)
+                    UpdatedBy = table.Column<string>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -416,6 +431,7 @@ namespace RektaRetailApp.Web.Migrations
                     UpdatedAt = table.Column<DateTimeOffset>(nullable: false),
                     CreatedBy = table.Column<string>(nullable: false),
                     UpdatedBy = table.Column<string>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(maxLength: 50, nullable: false),
                     Description = table.Column<string>(maxLength: 450, nullable: true),
                     ProductId = table.Column<int>(nullable: true)
@@ -427,47 +443,6 @@ namespace RektaRetailApp.Web.Migrations
                         name: "FK_Categories_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ItemsSold",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CreatedAt = table.Column<DateTimeOffset>(nullable: false),
-                    UpdatedAt = table.Column<DateTimeOffset>(nullable: false),
-                    CreatedBy = table.Column<string>(nullable: false),
-                    UpdatedBy = table.Column<string>(nullable: false),
-                    ItemName = table.Column<string>(nullable: false),
-                    Quantity = table.Column<float>(nullable: false),
-                    Comments = table.Column<string>(nullable: true),
-                    Price = table.Column<decimal>(type: "decimal(12,2)", nullable: false),
-                    ItemSoldCategoryId = table.Column<int>(nullable: false),
-                    ProductId = table.Column<int>(nullable: false),
-                    SaleId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ItemsSold", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ItemsSold_Categories_ItemSoldCategoryId",
-                        column: x => x.ItemSoldCategoryId,
-                        principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ItemsSold_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_ItemsSold_Sales_SaleId",
-                        column: x => x.SaleId,
-                        principalTable: "Sales",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -554,21 +529,6 @@ namespace RektaRetailApp.Web.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ItemsSold_ItemSoldCategoryId",
-                table: "ItemsSold",
-                column: "ItemSoldCategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ItemsSold_ProductId",
-                table: "ItemsSold",
-                column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ItemsSold_SaleId",
-                table: "ItemsSold",
-                column: "SaleId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_Expiration",
                 table: "PersistedGrants",
                 column: "Expiration");
@@ -584,6 +544,11 @@ namespace RektaRetailApp.Web.Migrations
                 column: "InventoryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Products_SaleId",
+                table: "Products",
+                column: "SaleId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Products_SupplierId",
                 table: "Products",
                 column: "SupplierId");
@@ -594,19 +559,14 @@ namespace RektaRetailApp.Web.Migrations
                 column: "SupplyDate");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sales_CustomerId",
+                name: "IX_Sales_ApplicationUserId",
                 table: "Sales",
-                column: "CustomerId");
+                column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Sales_SaleDate",
                 table: "Sales",
                 column: "SaleDate");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Sales_SalesPersonId",
-                table: "Sales",
-                column: "SalesPersonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SupplierInventories_SupplierId",
@@ -637,6 +597,10 @@ namespace RektaRetailApp.Web.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
+                name: "FK_Sales_AspNetUsers_ApplicationUserId",
+                table: "Sales");
+
+            migrationBuilder.DropForeignKey(
                 name: "FK_Categories_Products_ProductId",
                 table: "Categories");
 
@@ -659,10 +623,10 @@ namespace RektaRetailApp.Web.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "DeviceCodes");
+                name: "Customers");
 
             migrationBuilder.DropTable(
-                name: "ItemsSold");
+                name: "DeviceCodes");
 
             migrationBuilder.DropTable(
                 name: "PersistedGrants");
@@ -672,12 +636,6 @@ namespace RektaRetailApp.Web.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "Sales");
-
-            migrationBuilder.DropTable(
-                name: "Customers");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
@@ -690,6 +648,9 @@ namespace RektaRetailApp.Web.Migrations
 
             migrationBuilder.DropTable(
                 name: "Inventories");
+
+            migrationBuilder.DropTable(
+                name: "Sales");
 
             migrationBuilder.DropTable(
                 name: "Suppliers");
