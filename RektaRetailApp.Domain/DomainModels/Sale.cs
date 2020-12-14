@@ -27,6 +27,9 @@ namespace RektaRetailApp.Domain.DomainModels
         [JsonConverter(typeof(StringEnumConverter))]
         public SaleType TypeOfSale { get; set; }
 
+        [JsonConverter(typeof(StringEnumConverter))]
+        public PaymentType ModeOfPayment { get; set; }
+
         [StringLength(50)] public string? CustomerName { get; set; }
 
         [StringLength(50)] public string? CustomerPhoneNumber { get; set; }
