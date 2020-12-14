@@ -50,6 +50,7 @@ namespace RektaRetailApp.Web
       services.AddScoped<IInventoryRepository, InventoryRepository>();
       services.AddScoped<IProductRepository, ProductRepository>();
       services.AddScoped<ISupplierRepository, SupplierRepository>();
+      services.AddScoped<ISalesRepository, SalesRepository>();
       services.AddScoped<PagedList<Supplier>>();
       services.AddScoped<PagedList<SupplierApiModel>>();
       services.AddTransient<PaginatedMetaData>();

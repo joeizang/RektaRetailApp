@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace RektaRetailApp.Web.Migrations
 {
-    public partial class InitialAppDb : Migration
+    public partial class InitialDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -300,6 +300,7 @@ namespace RektaRetailApp.Web.Migrations
                     SubTotal = table.Column<decimal>(type: "decimal(12,2)", nullable: false),
                     GrandTotal = table.Column<decimal>(type: "decimal(12,2)", nullable: false),
                     TypeOfSale = table.Column<int>(nullable: false),
+                    ModeOfPayment = table.Column<int>(nullable: false),
                     CustomerName = table.Column<string>(maxLength: 50, nullable: true),
                     CustomerPhoneNumber = table.Column<string>(maxLength: 50, nullable: true),
                     ApplicationUserId = table.Column<string>(nullable: true)
@@ -365,8 +366,7 @@ namespace RektaRetailApp.Web.Migrations
                     UnitMeasure = table.Column<int>(nullable: false),
                     Verified = table.Column<bool>(nullable: false),
                     InventoryId = table.Column<int>(nullable: false),
-                    SupplierId = table.Column<int>(nullable: false),
-                    SaleId = table.Column<int>(nullable: true)
+                    SupplierId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -375,12 +375,6 @@ namespace RektaRetailApp.Web.Migrations
                         name: "FK_Products_Inventories_InventoryId",
                         column: x => x.InventoryId,
                         principalTable: "Inventories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Products_Sales_SaleId",
-                        column: x => x.SaleId,
-                        principalTable: "Sales",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -443,6 +437,41 @@ namespace RektaRetailApp.Web.Migrations
                         name: "FK_Categories_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ItemsSold",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CreatedAt = table.Column<DateTimeOffset>(nullable: false),
+                    UpdatedAt = table.Column<DateTimeOffset>(nullable: false),
+                    CreatedBy = table.Column<string>(nullable: false),
+                    UpdatedBy = table.Column<string>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    ItemName = table.Column<string>(nullable: false),
+                    Quantity = table.Column<float>(nullable: false),
+                    Comments = table.Column<string>(nullable: true),
+                    Price = table.Column<decimal>(type: "decimal(12,2)", nullable: false),
+                    ProductId = table.Column<int>(nullable: false),
+                    SaleId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ItemsSold", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ItemsSold_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ItemsSold_Sales_SaleId",
+                        column: x => x.SaleId,
+                        principalTable: "Sales",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -529,6 +558,22 @@ namespace RektaRetailApp.Web.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_ItemsSold_ItemName",
+                table: "ItemsSold",
+                column: "ItemName");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ItemsSold_ProductId",
+                table: "ItemsSold",
+                column: "ProductId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ItemsSold_SaleId",
+                table: "ItemsSold",
+                column: "SaleId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_Expiration",
                 table: "PersistedGrants",
                 column: "Expiration");
@@ -542,11 +587,6 @@ namespace RektaRetailApp.Web.Migrations
                 name: "IX_Products_InventoryId",
                 table: "Products",
                 column: "InventoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Products_SaleId",
-                table: "Products",
-                column: "SaleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_SupplierId",
@@ -597,10 +637,6 @@ namespace RektaRetailApp.Web.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Sales_AspNetUsers_ApplicationUserId",
-                table: "Sales");
-
-            migrationBuilder.DropForeignKey(
                 name: "FK_Categories_Products_ProductId",
                 table: "Categories");
 
@@ -629,6 +665,9 @@ namespace RektaRetailApp.Web.Migrations
                 name: "DeviceCodes");
 
             migrationBuilder.DropTable(
+                name: "ItemsSold");
+
+            migrationBuilder.DropTable(
                 name: "PersistedGrants");
 
             migrationBuilder.DropTable(
@@ -636,6 +675,9 @@ namespace RektaRetailApp.Web.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Sales");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
@@ -648,9 +690,6 @@ namespace RektaRetailApp.Web.Migrations
 
             migrationBuilder.DropTable(
                 name: "Inventories");
-
-            migrationBuilder.DropTable(
-                name: "Sales");
 
             migrationBuilder.DropTable(
                 name: "Suppliers");
