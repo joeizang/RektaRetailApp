@@ -19,7 +19,7 @@ namespace RektaRetailApp.Web.Abstractions.Entities
 
         Task CancelASale(CancelSaleCommand command, CancellationToken token);
 
-        Task<PagedList<SaleApiModel>> GetAllSales(GetAllSalesQuery query, CancellationToken token);
+        Task<PagedList<Sale>> GetAllSales(GetAllSalesQuery query, CancellationToken token);
 
         Task<Sale> GetSaleById(GetSaleByIdQuery query, CancellationToken token);
 

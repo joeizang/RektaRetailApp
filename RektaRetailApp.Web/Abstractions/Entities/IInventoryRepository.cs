@@ -9,12 +9,14 @@ using RektaRetailApp.Domain.DomainModels;
 using RektaRetailApp.Web.ApiModel.Inventory;
 using RektaRetailApp.Web.Commands.Inventory;
 using RektaRetailApp.Web.Data;
+using RektaRetailApp.Web.Helpers;
+using RektaRetailApp.Web.Queries.Inventory;
 
 namespace RektaRetailApp.Web.Abstractions.Entities
 {
   public interface IInventoryRepository : IRepository
   {
-    Task<IEnumerable<InventoryApiModel>> GetAllInventories(string? searchTerm, bool ascending = true);
+    Task<PagedList<Inventory>> GetAllInventories(GetAllInventoriesQuery request, CancellationToken token);
 
     Task<InventoryDetailApiModel> GetInventoryById(int id);
 

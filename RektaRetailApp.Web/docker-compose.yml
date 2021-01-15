@@ -5,8 +5,8 @@ services:
     env_file:
       - dbservice.env
     volumes:
-      - pg-data:/var/lib/postgresql/data
+      - pg-db:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+      - 5434:5432
 volumes:
-  pg-data:
+  pg-db:

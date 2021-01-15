@@ -15,6 +15,8 @@ using RektaRetailApp.Web.Abstractions.Entities;
 using RektaRetailApp.Web.ApiModel.Inventory;
 using RektaRetailApp.Web.Commands.Inventory;
 using RektaRetailApp.Web.Data;
+using RektaRetailApp.Web.Helpers;
+using RektaRetailApp.Web.Queries.Inventory;
 
 namespace RektaRetailApp.Web.Services
 {
@@ -31,29 +33,28 @@ namespace RektaRetailApp.Web.Services
       _mapper = mapper;
     }
 
-    public async Task<IEnumerable<InventoryApiModel>> GetAllInventories(string? searchTerm, bool ascending)
+    public async Task<PagedList<Inventory>> GetAllInventories(GetAllInventoriesQuery request, CancellationToken token)
     {
       IQueryable<Inventory> orderedQuery;
       var query = _set.AsNoTracking()
                   .Include(i => i.Category)
                   .Include(i => i.InventoryItems);
-      if (!string.IsNullOrEmpty(searchTerm))
+      if (!string.IsNullOrEmpty(request.SearchString))
       {
         IQueryable<Inventory> newQuery = query.Where(x =>
-            x.BatchNumber != null && x.BatchNumber!.Equals(searchTerm) && x.Name!.Equals(searchTerm));
-        if (ascending == false)
+            x.BatchNumber != null && x.BatchNumber!.Equals(request.SearchString) && x.Name!.Equals(request.SearchString));
+        if (request.Ascending == false)
           orderedQuery = newQuery.OrderByDescending(x => x.SupplyDate).ThenByDescending(x => x.Name)
               .ThenByDescending(x => x.BatchNumber);
       }
 
-      if (ascending == false)
+      if (request.Ascending == false)
         orderedQuery = query.OrderByDescending(x => x.SupplyDate).ThenByDescending(x => x.Name)
             .ThenByDescending(x => x.BatchNumber);
       orderedQuery = query.OrderBy(x => x.SupplyDate).ThenBy(x => x.Name).ThenBy(x => x.BatchNumber);
 
-      var result = await orderedQuery
-          .ProjectTo<InventoryApiModel>(_mapper.ConfigurationProvider)
-          .ToListAsync().ConfigureAwait(false);
+      var result = await orderedQuery.PaginatedListAsync(request.PageNumber, request.PageSize, token)
+          .ConfigureAwait(false);
       return result;
     }
 

@@ -14,7 +14,7 @@ namespace RektaRetailApp.Web.Abstractions.Entities
 {
     public interface IProductRepository : IRepository
     {
-        Task<PagedList<ProductApiModel>> GetAllProducts(GetAllProductsQuery query, CancellationToken token);
+        Task<PagedList<Product>> GetAllProducts(GetAllProductsQuery query, CancellationToken token);
 
         Task<Product> GetProductByIdAsync(int id, CancellationToken token);
 

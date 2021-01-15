@@ -40,30 +40,34 @@ namespace RektaRetailApp.Web.Services
     {
       return Commit<Supplier>(token);
     }
-
-    public async Task<PagedList<SupplierApiModel>> GetSuppliersAsync(GetAllSuppliersQuery query, CancellationToken token)
+    
+    /// <summary>
+    /// Returns a customized PagedList of ApiModels that will form
+    /// part of the result of GetSupplierAsync Method.
+    /// </summary>
+    /// <param name="query"></param>
+    /// <param name="token"></param>
+    /// <returns></returns>
+    public async Task<PagedList<Supplier>> GetSuppliersAsync(GetAllSuppliersQuery query, CancellationToken token)
     {
-      IQueryable<Supplier> suppliers = _set.AsNoTracking();
+        var suppliers = _set.AsNoTracking();
 
-      if (string.IsNullOrEmpty(query.SearchTerm))
-      {
-        if (query.PageSize is null || query.PageNumber is null)
-          return await suppliers.ProjectTo<SupplierApiModel>(_mapper.ConfigurationProvider)
-              .PaginatedListAsync(1, 10, token);
-        var result = await suppliers.ProjectTo<SupplierApiModel>(_mapper.ConfigurationProvider)
-            .PaginatedListAsync(query.PageNumber.Value, query.PageSize.Value, token);
-        return result;
-      }
+        if (string.IsNullOrEmpty(query.SearchTerm))
+        {
+            if (query.PageSize is null || query.PageNumber is null)
+                return await _set.PaginatedListAsync(1, 10, token);
+            var result = await _set.PaginatedListAsync(query.PageNumber.Value, query.PageSize.Value, token);
+            return result;
+        }
 
-      suppliers = suppliers.Where(s => s.MobileNumber != null && s.Name != null &&
-                                       s.Name.Equals(query.SearchTerm) &&
-                                       s.MobileNumber.Equals(query.SearchTerm));
-      if (query.PageSize == null && query.PageNumber == null)
-        return await suppliers.ProjectTo<SupplierApiModel>(_mapper.ConfigurationProvider)
-            .PaginatedListAsync(1, 10, token);
-      var supplierResults = await suppliers.ProjectTo<SupplierApiModel>(_mapper.ConfigurationProvider)
-          .PaginatedListAsync(query.PageNumber!.Value, query.PageSize!.Value, token);
-      return supplierResults;
+        suppliers = suppliers.Where(s => s.MobileNumber != null && s.Name != null &&
+                                         s.Name.Equals(query.SearchTerm) &&
+                                         s.MobileNumber.Equals(query.SearchTerm));
+        if (query.PageSize == null && query.PageNumber == null)
+            return await suppliers.PaginatedListAsync(1, 10, token);
+        var supplierResults = await suppliers.PaginatedListAsync(query.PageNumber!.Value, 
+            query.PageSize!.Value, token);
+        return supplierResults;
     }
 
     public async Task<Supplier> GetSupplierById(int id, CancellationToken token)

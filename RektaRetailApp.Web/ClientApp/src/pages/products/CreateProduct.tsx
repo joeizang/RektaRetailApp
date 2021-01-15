@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react';
-import { Card, Form, FormControl, FormGroup } from 'react-bootstrap';
 import { COLOURS } from '../../constants';
 import { useForm } from 'react-hook-form';
+import { Card, CardContent, CardHeader, FormGroup, TextField } from '@material-ui/core';
 
-interface IProductForm {
+interface ProductForm {
   productName: string;
 }
 
@@ -13,31 +13,25 @@ export function CreateProduct() {
   return (
     <Fragment>
       <Card className="shadow-sm mb-5 bg-white rounded">
-        <Card.Header
-          as="h3"
-          style={{ backgroundColor: COLOURS.primary, color: 'whitesmoke' }}
-        >
+        <CardHeader as="h3" style={{ backgroundColor: COLOURS.primary, color: 'whitesmoke' }}>
           Add a New Product
-        </Card.Header>
-        <Card.Body>
-          <Form>
+        </CardHeader>
+        <CardContent>
+          <form>
             <FormGroup>
-              <FormControl
+              <TextField
+                variant={'outlined'}
                 type="text"
                 id="productName"
-                ref={register({
+                innerRef={register({
                   required: 'Please provide a name for the product!',
                   maxLength: 50,
                 })}
               />
-              {errors.productName && (
-                <span style={{ color: 'red' }}>
-                  {errors.productName.message}
-                </span>
-              )}
+              {errors.productName && <span style={{ color: 'red' }}>{errors.productName.message}</span>}
             </FormGroup>
-          </Form>
-        </Card.Body>
+          </form>
+        </CardContent>
       </Card>
     </Fragment>
   );

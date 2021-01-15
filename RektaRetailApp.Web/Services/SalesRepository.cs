@@ -7,6 +7,7 @@ using AutoMapper;
 using JetBrains.Annotations;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.DynamicLinq;
 using RektaRetailApp.Domain.DomainModels;
 using RektaRetailApp.Web.Abstractions;
 using RektaRetailApp.Web.Abstractions.Entities;
@@ -69,56 +70,38 @@ namespace RektaRetailApp.Web.Services
             //after cancellation, inventory quantities should be updated
         }
 
-        public async Task<PagedList<SaleApiModel>> GetAllSales(GetAllSalesQuery query, CancellationToken token)
+        public async Task<PagedList<Sale>> GetAllSales(GetAllSalesQuery query, CancellationToken token)
         {  
             var queryable = _set.AsNoTracking();
 
-            
             //TODO: BUILD YOUR DIFFERENT QUERIES ON THE IQUERYABLE INSTANCE TO SEARCH FILTER AND ORDER
             if (query.SearchTerm is null && query.OrderByTerm is null)
             {
-                    var saleQueryable = queryable.Select(s => new SaleApiModel
-                    {
-                        Id = s.Id,
-                        TypeOfPayment = s.ModeOfPayment,
-                        SaleDate = s.SaleDate,
-                        SalesPerson = s.SalesPersonId,
-                        GrandTotal = s.GrandTotal,
-                        NumberOfItemsSold = s.ItemsSold.Count,
-                        TypeOfSale = s.TypeOfSale,
-                        ProductsBought = s.ItemsSold.Select(x => new ItemSoldApiModel
-                        {
-                            Id = x.Id,
-                            ItemName = x.ItemName,
-                            Price = x.Price,
-                            Quantity = x.Quantity, //this should be the quantity sold not the quantity in stock.
-                            //ProductCategory = string.Join(",", x.ProductCategories.Select(x => x.Name).ToArray())
-                        }).ToList()
-                    });
-
-                    var result = new PagedList<SaleApiModel>(
-                        await saleQueryable.CountAsync(token).ConfigureAwait(false), query.PageNumber, query.PageSize,
-                        await saleQueryable.ToListAsync(token).ConfigureAwait(false));
+                var result = new PagedList<Sale>(
+                        await queryable.CountAsync(token)
+                            .ConfigureAwait(false), query.PageNumber, query.PageSize,
+                        await queryable.ToListAsync(token).ConfigureAwait(false));
                     return result;
             }
 
             var parsedTotal = decimal.Parse(query.SearchTerm!);
             var parsedDate = DateTimeOffset.Parse(query.SearchTerm!);
-            queryable = queryable.Where(s => s.SalesPersonId.Equals(query.SearchTerm) || s.SaleDate.Equals(parsedDate));
+            queryable = queryable.Where(s => s.SalesPersonId.Equals(query.SearchTerm) 
+                                             || s.SaleDate.Equals(parsedDate) || s.GrandTotal.Equals(parsedTotal));
             queryable = queryable.OrderBy(x => x.SaleDate);
             //TODO: ALSO FACTOR IN THAT YOUR RESULT MUST BE PAGINATED.
-
-            var processedResult = await PagedList<SaleApiModel>.CreatePagedList(
-                queryable.Select(x => new SaleApiModel
-                {
-                    GrandTotal = x.GrandTotal,
-                    Id = x.Id,
-                    NumberOfItemsSold = x.ItemsSold.Count,
-                    SaleDate = x.SaleDate,
-                    SalesPerson = x.SalesPersonId,
-                    TypeOfPayment = x.ModeOfPayment,
-                    TypeOfSale = x.TypeOfSale
-                }), query.PageNumber, query.PageSize, token).ConfigureAwait(false);
+            // queryable.Select(x => new SaleApiModel
+            // {
+            //     GrandTotal = x.GrandTotal,
+            //     Id = x.Id,
+            //     NumberOfItemsSold = x.ItemsSold.Count,
+            //     SaleDate = x.SaleDate,
+            //     SalesPerson = x.SalesPersonId,
+            //     TypeOfPayment = x.ModeOfPayment,
+            //     TypeOfSale = x.TypeOfSale
+            // }),
+            var processedResult = await PagedList<Sale>.CreatePagedList(queryable,
+                 query.PageNumber, query.PageSize, token).ConfigureAwait(false);
             return processedResult;
         }
 

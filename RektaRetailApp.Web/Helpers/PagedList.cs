@@ -46,7 +46,8 @@ namespace RektaRetailApp.Web.Helpers
         public static async Task<PagedList<T>> CreatePagedList(IQueryable<T> source, int pageNumber, int pageSize, CancellationToken token)
         {
             var count = await source.CountAsync(token).ConfigureAwait(false);
-            var items = await source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync(token).ConfigureAwait(false);
+            var items = await source.Skip((pageNumber - 1) * pageSize).Take(pageSize)
+                .ToListAsync(token).ConfigureAwait(false);
             return new PagedList<T>(count,pageSize,pageNumber,items);
         }
     }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace RektaRetailApp.Web.ApiModel
 {
     public class PaginatedResponse<T> where T : class
     {
-        public PagedList<T> List { get; }
+        public IEnumerable<T> Data { get; }
 
         public int TotalCount { get; }
         public int PageSize { get; }
@@ -39,10 +40,10 @@ namespace RektaRetailApp.Web.ApiModel
         }
 
 
-        public PaginatedResponse(PagedList<T> list, int totalCount, int pageSize, int currentPage, string? previousPageLink, 
+        public PaginatedResponse(IEnumerable<T> sequence, int totalCount, int pageSize, int currentPage, string? previousPageLink, 
             string? nextPageLink, string currentResponseStatus, object? errors = null)
         {
-            List = list;
+            Data = sequence;
             TotalCount = totalCount;
             PageSize = pageSize;
             CurrentPage = currentPage;
@@ -55,13 +56,16 @@ namespace RektaRetailApp.Web.ApiModel
 
         public PaginatedResponse(PagedList<T> list, string currentResponseStatus, dynamic? errors = null)
         {
-            List = list;
+            Data = list;
             CurrentResponseStatus = currentResponseStatus;
+            if(typeof(IEnumerable).IsAssignableFrom(errors) && errors != null)
+                Error?.AddRange(errors);
+            Error?.Add(errors);
         }
 
         public PaginatedResponse()
         {
-            List = new PagedList<T>();
+            Data = new PagedList<T>();
             CurrentResponseStatus = ResponseStatus.NonAction;
         }
     }

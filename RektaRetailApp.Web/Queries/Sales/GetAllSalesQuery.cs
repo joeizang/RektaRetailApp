@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using RektaRetailApp.Web.Abstractions;
 using RektaRetailApp.Web.Abstractions.Entities;
 using RektaRetailApp.Web.ApiModel;
 using RektaRetailApp.Web.ApiModel.Sales;
@@ -16,8 +18,11 @@ namespace RektaRetailApp.Web.Queries.Sales
         public int PageNumber { get; set; }
 
         public string? SearchTerm { get; set; }
-
-        public string? OrderByTerm { get; set; }
+        
+        /// <summary>
+        /// Default OrderBy term is "Date" unless otherwise stated
+        /// </summary>
+        public string? OrderByTerm { get; set; } = "Date";
     }
 
 
@@ -36,18 +41,51 @@ namespace RektaRetailApp.Web.Queries.Sales
         {
             try
             {
+                var temp = _uriGen.BaseUri;
+                var finalUri = $"{temp}/api/sales";
                 var sales = await _repo.GetAllSales(request, cancellationToken).ConfigureAwait(false);
-                var prev = _uriGen.AddQueryStringParams("pageNumber", (request.PageNumber - 1).ToString()!);
-                prev.AddQueryStringParams("pageSize", request.PageSize.ToString()!);
-                var nextL = _uriGen.AddQueryStringParams("pageNumber", (request.PageNumber + 1).ToString()!);
-                nextL.AddQueryStringParams("pageSize", request.PageSize.ToString()!);
-
+                
+                var prev = _uriGen
+                    .AddQueryStringParams(finalUri, "pageNumber", (request.PageNumber - 1).ToString()!);
+                prev.AddQueryStringParams(finalUri,"pageSize", request.PageSize.ToString()!);
+                
+                var nextL = _uriGen.AddQueryStringParams(finalUri,"pageNumber", (request.PageNumber + 1).ToString()!);
+                nextL.AddQueryStringParams(finalUri,"pageSize", request.PageSize.ToString()!);
+                
                 var prevLink = sales.HasPrevious
                     ? prev.GenerateUri() : null;
                 var nextLink = sales.HasNext
                     ? nextL.GenerateUri() : null;
+                var salesApiModel = new List<SaleApiModel>();
+                var items = new List<ItemSoldApiModel>();
+                for (var i = 0; i < sales.Count; i++)
+                {
+                    var apiModel = new SaleApiModel
+                    {
+                        GrandTotal = sales[i].GrandTotal,
+                        Id = sales[i].Id,
+                        SalesPerson = sales[i].SalesPersonId,
+                        SaleDate = sales[i].SaleDate,
+                        TypeOfPayment = sales[i].ModeOfPayment,
+                        TypeOfSale = sales[i].TypeOfSale
+                    };
 
-                var result = new PaginatedResponse<SaleApiModel>(sales,
+                    for (var j = 0; j < sales[i].ItemsSold.Count; j++)
+                    {
+                        var item = new ItemSoldApiModel
+                        {
+                            Id = sales[i].ItemsSold[j].Id,
+                            ItemName = sales[i].ItemsSold[j].ItemName,
+                            Price = sales[i].ItemsSold[j].Price,
+                            Quantity = sales[i].ItemsSold[j].Quantity
+                        };
+                        items.Add(item);
+                    }
+                    apiModel.ProductsBought.AddRange(items);
+                    salesApiModel.Add(apiModel);
+                }
+                
+                var result = new PaginatedResponse<SaleApiModel>(salesApiModel,
                     sales.TotalCount, sales.PageSize, sales.CurrentPage,
                     prevLink?.PathAndQuery, nextLink?.PathAndQuery, ResponseStatus.Success);
 
