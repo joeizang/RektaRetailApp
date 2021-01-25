@@ -13,7 +13,7 @@ namespace RektaRetailApp.Domain.DomainModels
     {
         public Sale()
         {
-            ItemsSold = new List<Product>();
+            ItemsSold = new List<ItemSold>();
         }
 
         public DateTimeOffset SaleDate { get; set; }
@@ -27,10 +27,13 @@ namespace RektaRetailApp.Domain.DomainModels
         [JsonConverter(typeof(StringEnumConverter))]
         public SaleType TypeOfSale { get; set; }
 
+        [JsonConverter(typeof(StringEnumConverter))]
+        public PaymentType ModeOfPayment { get; set; }
+
         [StringLength(50)] public string? CustomerName { get; set; }
 
         [StringLength(50)] public string? CustomerPhoneNumber { get; set; }
 
-        public List<Product> ItemsSold { get; set; }
+        public List<ItemSold> ItemsSold { get; set; }
     }
 }

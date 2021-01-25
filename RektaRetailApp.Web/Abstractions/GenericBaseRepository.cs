@@ -4,11 +4,13 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using RektaRetailApp.Domain.Abstractions;
 using RektaRetailApp.Domain.DomainModels;
 using RektaRetailApp.Web.Data;
+using RektaRetailApp.Web.Helpers;
 
 namespace RektaRetailApp.Web.Abstractions
 {
@@ -69,5 +71,19 @@ namespace RektaRetailApp.Web.Abstractions
         var altResult = await query.SingleOrDefaultAsync(token).ConfigureAwait(false);
         return altResult;
     }
+
+    // public Task<PagedList<T>> GetPagedResult<T>(IRequest<T> query, CancellationToken token,
+    //     Expression<Func<T, object>>[]? includes = null) where T : class
+    // {
+    //     IQueryable<T> queryable = null;
+    //     if (includes != null && includes.Length > 0)
+    //     {
+    //         queryable = includes.Aggregate(queryable, (currentSequence, includable) =>
+    //             currentSequence.Include(includable));
+    //         if
+    //     }
+    //
+    //
+    // }
   }
 }

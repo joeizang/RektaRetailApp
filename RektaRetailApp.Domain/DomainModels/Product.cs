@@ -1,9 +1,11 @@
-﻿using System;
+﻿using System.Collections.Specialized;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 using RektaRetailApp.Domain.Abstractions;
+using Newtonsoft.Json.Converters;
 
 namespace RektaRetailApp.Domain.DomainModels
 {
@@ -44,6 +46,7 @@ namespace RektaRetailApp.Domain.DomainModels
 
         public string? Comments { get; set; }
 
+        [JsonConverter(typeof(StringEnumConverter))]
         public UnitMeasure UnitMeasure { get; set; }
 
         public bool Verified { get; set; }

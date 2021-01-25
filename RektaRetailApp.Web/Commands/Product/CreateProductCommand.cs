@@ -62,7 +62,8 @@ namespace RektaRetailApp.Web.Commands.Product
             {
                 var includes = new Expression<Func<Domain.DomainModels.Product, object>>[]
                 {
-                    p => p.ProductCategories
+                    p => p.ProductCategories,
+                    p => p.Supplier!
                 };
                 await _repo.CreateProductAsync(request, cancellationToken).ConfigureAwait(false);
 

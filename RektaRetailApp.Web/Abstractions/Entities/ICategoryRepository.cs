@@ -20,12 +20,6 @@ namespace RektaRetailApp.Web.Abstractions.Entities
 
     void Create(CreateCategoryApiModel model);
 
-    //IEnumerable<object> Get();
-
-    //Task<T> GetById(long id);
-
-    //void Create(object entity);
-
     Task Update(UpdateCategoryApiModel entity);
 
     Task Delete(DeleteCategoryApiModel entity);

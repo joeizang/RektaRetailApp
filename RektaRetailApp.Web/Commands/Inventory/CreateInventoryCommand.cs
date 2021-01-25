@@ -40,9 +40,7 @@ namespace RektaRetailApp.Web.Commands.Inventory
       _repo.CreateInventory(request);
       await _repo.SaveAsync(cancellationToken).ConfigureAwait(false);
       var result = await _repo
-          .GetInventoryBy(x =>
-              x.BatchNumber!.Equals(request.BatchNumber!.ToUpperInvariant()) &&
-              x.Name!.Equals(request.Name.ToUpperInvariant()) &&
+          .GetInventoryBy(x => x.Name!.Equals(request.Name.ToUpperInvariant()) &&
               x.Description!.Equals(request.Description!.ToUpperInvariant()));
       return result;
     }

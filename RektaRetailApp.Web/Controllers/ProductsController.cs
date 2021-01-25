@@ -27,31 +27,10 @@ namespace RektaRetailApp.Web.Controllers
 
         // GET: api/<ProductsController>
         [HttpGet(Name = "GetAllProducts")]
-        public async Task<ActionResult<PaginatedResponse<ProductApiModel>>> GetAllProducts([FromQuery] GetAllProductsQuery query)
+        public async Task<ActionResult<PaginatedResponse<ProductApiModel>>> GetAllProducts([FromQuery] GetAllProductsQuery query, CancellationToken token)
         {
-            var result = await _mediator.Send(query)
+            var result = await _mediator.Send(query, token)
                 .ConfigureAwait(false);
-            return Ok(result);
-        }
-
-        [HttpGet(Name = "GetProductsDropDown")]
-        public async Task<ActionResult<Response<ProductSummaryApiModel>>> GetProductsForDropdown(
-            [FromQuery] GetProductsForSaleQuery query, CancellationToken token)
-        {
-            var result = await _mediator.Send(query, token).ConfigureAwait(false);
-            if (result.CurrentResponseStatus == ResponseStatus.Success)
-                return Ok(result);
-            return BadRequest(result);
-        }
-
-        [HttpGet(Name = "forSale")]
-        public async Task<ActionResult<Response<IEnumerable<ProductsForSaleApiModel>>>> GetProductsForSale(GetProductsForSaleQuery query)
-        {
-            var result = await _mediator.Send(query).ConfigureAwait(false);
-            if(!result.CurrentResponseStatus.Equals(ResponseStatus.Success))
-            {
-                return BadRequest(result);
-            }
             return Ok(result);
         }
 

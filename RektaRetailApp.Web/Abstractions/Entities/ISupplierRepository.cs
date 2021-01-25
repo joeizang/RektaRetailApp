@@ -16,7 +16,7 @@ namespace RektaRetailApp.Web.Abstractions.Entities
     {
         Task SaveAsync(CancellationToken token);
 
-        Task<PagedList<SupplierApiModel>> GetSuppliersAsync(GetAllSuppliersQuery query, CancellationToken token);
+        Task<PagedList<Supplier>> GetSuppliersAsync(GetAllSuppliersQuery query, CancellationToken token);
 
         Task<Supplier> GetSupplierById(int id, CancellationToken token);
 

@@ -18,6 +18,8 @@ namespace RektaRetailApp.Web.Data
 
         public DbSet<Inventory> Inventories { get; set; } = default!;
 
+        public DbSet<ItemSold> ItemsSold { get; set; } = default!;
+
         public DbSet<Customer> Customers { get; set; } = default!;
 
         public DbSet<Product> Products { get; set; } = default!;
@@ -44,6 +46,8 @@ namespace RektaRetailApp.Web.Data
                 .HasQueryFilter(x => !x.IsDeleted);
             builder.Entity<Inventory>()
                 .HasQueryFilter(x => !x.IsDeleted);
+            builder.Entity<ItemSold>()
+                .HasQueryFilter(x => x.IsDeleted);
             builder.Entity<Category>()
                 .HasQueryFilter(x => !x.IsDeleted);
             builder.Entity<Supplier>()
@@ -69,17 +73,31 @@ namespace RektaRetailApp.Web.Data
             builder.Entity<Inventory>()
                 .HasMany(i => i.InventoryItems)
                 .WithOne().OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<ItemSold>()
+                .HasOne(i => i.Product)
+                .WithOne()
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.Entity<ApplicationUser>()
                 .HasMany(x => x.SalesYouOwn)
                 .WithOne()
                 .OnDelete(DeleteBehavior.Restrict);
+            
             builder.Entity<Sale>()
                 .HasMany(s => s.ItemsSold)
                 .WithOne()
                 .OnDelete(DeleteBehavior.Restrict);
+            
             builder.Entity<Product>()
                 .HasMany(p => p.ProductCategories)
                 .WithOne()
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            builder.Entity<Product>()
+                .HasOne(p => p.Inventory)
+                .WithMany(i => i!.InventoryItems)
+                .HasForeignKey(p => p.InventoryId)
                 .OnDelete(DeleteBehavior.Restrict);
             
 
@@ -126,6 +144,8 @@ namespace RektaRetailApp.Web.Data
                 .IsUnique();
             builder.Entity<Sale>()
                 .HasIndex(s => s.SaleDate);
+            builder.Entity<ItemSold>()
+                .HasIndex(i => i.ItemName);
         }
     }
 }

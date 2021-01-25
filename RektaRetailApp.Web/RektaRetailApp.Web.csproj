@@ -10,6 +10,9 @@
     <SpaRoot>ClientApp\</SpaRoot>
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
   </PropertyGroup>
+  <PropertyGroup>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Ardalis.GuardClauses" Version="3.0.1" />
@@ -49,6 +52,7 @@
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
     <Compile Remove="%2a%2a\**" />
     <Compile Remove="ClientApp\**" />
+    <Compile Include="Abstractions\ApiRoutes.cs" />
     <Content Remove="$(SpaRoot)**" />
     <Content Remove="%2a%2a\**" />
     <Content Remove="ClientApp\**" />

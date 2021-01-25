@@ -7,6 +7,7 @@ namespace RektaRetailApp.Web.Helpers
         public interface IUriGenerator
     {
         UriGenerator AddQueryStringParams(string segmentName, string segmentValue);
+        UriGenerator AddQueryStringParams(string updatedUri, string segmentName, string segmentValue);
         Uri GenerateUri();
         string BaseUri { get; }
     }
@@ -18,6 +19,12 @@ namespace RektaRetailApp.Web.Helpers
         public UriGenerator AddQueryStringParams(string segmentName, string segmentValue)
         {
             _generatedUri = QueryHelpers.AddQueryString(BaseUri, segmentName, segmentValue);
+            return this;
+        }
+
+        public UriGenerator AddQueryStringParams(string updatedUri, string segmentName, string segmentValue)
+        {
+            _generatedUri = QueryHelpers.AddQueryString(updatedUri, segmentName, segmentValue);
             return this;
         }
 

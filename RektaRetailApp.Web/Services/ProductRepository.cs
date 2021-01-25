@@ -32,26 +32,34 @@ namespace RektaRetailApp.Web.Services
             _set = _db.Products;
         }
 
-        public async Task<PagedList<ProductApiModel>> GetAllProducts(GetAllProductsQuery query, CancellationToken token)
+        public async Task<PagedList<Product>> GetAllProducts(GetAllProductsQuery query, CancellationToken token)
         {
             IQueryable<Product> products = _set.AsNoTracking();
-            IQueryable<ProductApiModel> tempPaged;
             if (!string.IsNullOrEmpty(query.SearchTerm))
             {
                 products = products.Where(p => p.Brand!.Contains(query.SearchTerm.Trim().ToUpperInvariant())
-                                               && p.Name.Contains(query.SearchTerm.Trim().ToUpperInvariant()));
-                tempPaged = products.Select(p => new ProductApiModel(p.Name,p.SupplierId,
-                    p.Quantity, p.CostPrice, p.UnitPrice, p.RetailPrice, p.Id));
-                var paged = await PagedList<ProductApiModel>
-                    .CreatePagedList(tempPaged, query.PageNumber, query.PageSize, token).ConfigureAwait(false);
+                                               || p.Name.Contains(query.SearchTerm.Trim().ToUpperInvariant()));
+                var temp = new List<ProductApiModel>();
+                
+                // tempPaged = products.Select(p => new ProductApiModel(p.Name,p.SupplierId,
+                //     p.Quantity, p.CostPrice, p.UnitPrice, p.RetailPrice, p.Id));
+                var paged = await PagedList<Product>
+                    .CreatePagedList(products, query.PageNumber, query.PageSize, token)
+                    .ConfigureAwait(false);
                 return paged;
 
             }
 
-            tempPaged = products.Select(p => new ProductApiModel(p.Name, p.SupplierId, p.Quantity,
-                p.CostPrice, p.UnitPrice,p.RetailPrice, p.Id));
-            var pagedProducts = await PagedList<ProductApiModel>
-                .CreatePagedList(tempPaged, 1, 10, token).ConfigureAwait(false);
+            // var tempPaged = new List<ProductApiModel>();
+            // foreach (var p in products)
+            // {
+            //     var tPaged = new ProductApiModel(p.Name, p.SupplierId, p.Quantity,
+            //         p.CostPrice, p.UnitPrice, p.RetailPrice, p.Id);
+            //     tempPaged.Add(tPaged);
+            // }
+            var pagedProducts = await PagedList<Product>
+                .CreatePagedList(products, 1, 10, token)
+                .ConfigureAwait(false);
             return pagedProducts;
         }
 

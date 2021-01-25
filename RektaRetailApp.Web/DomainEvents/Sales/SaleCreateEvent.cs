@@ -10,7 +10,7 @@ namespace RektaRetailApp.Web.DomainEvents.Sales
 {
     public class SaleCreateEvent : DomainEvent
     {
-        public SaleCreateEvent(SalesApiModel model)
+        public SaleCreateEvent(SaleApiModel model)
         {
             HappenedAt = DateTimeOffset.Now;
             ActionPerformed = TaskPerformed.Creation;
